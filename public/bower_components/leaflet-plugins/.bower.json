@@ -1,0 +1,18 @@
+{
+  "name": "leaflet-plugins",
+  "homepage": "https://github.com/shramov/leaflet-plugins",
+  "version": "1.1.1",
+  "_release": "1.1.1",
+  "main": [
+    "./layer/tile/Google.js"
+  ],
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.1",
+    "commit": "404b351338c340bb61a0c06b9e2d294148cb0a19"
+  },
+  "_source": "git://github.com/shramov/leaflet-plugins.git",
+  "_target": "~1.1.1",
+  "_originalSource": "leaflet-plugins",
+  "_direct": true
+}

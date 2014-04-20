@@ -1,0 +1,41 @@
+extends layout
+
+block body
+    div#menus
+        nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
+            ul.title-area
+                li.name
+                    h1
+                        a(href='#') Ceres imaging
+                li.toggle-topbar.menu-icon
+                    a(href='#') menu
+            section.top-bar-section
+                ul.right
+                    li.has-dropdown
+                        a(href='#') settings
+                        ul.dropdown
+                            li
+                                a(href='#') first link
+                    li.active
+                        a(href='#' rel='logout') logout
+                ul.left
+                    li
+                        a(href='#') button
+
+        .off-canvas-wrap(data-offcanvas)
+            .inner-wrap
+                a.left-off-canvas-toggle.menu-icon(href='#' ng-cloak ng-show='user.currentProfile')
+                    span
+                        #menu-icon
+                            i.el-icon-th-list
+
+                section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
+                    ul.off-canvas-list
+                        li
+                            label Maps
+                        li
+                            a(href='#') first map
+                        li
+                            a(href='#') second map
+                section.main-section
+                div(ng-view)
