@@ -48,9 +48,9 @@ angular.module('ceresApp')
   .controller('DefaultMapController', ['$scope', 'leafletData', function($scope, leafletData){
     angular.extend($scope, {
       america: {
-        lat: 38,
-        lng: -94,
-        zoom: 4
+        lat: 36.51,
+        lng: -120.452,
+        zoom: 16
       },
 
       layers: {
@@ -72,6 +72,19 @@ angular.module('ceresApp')
             layerParams: {
               key: '007b9471b4c74da4a6ec7ff43552b16f',
               styleId: 7
+            }
+          }
+        },
+        overlays: {
+          ndvi: {
+            name: 'NDVI',
+            type: 'imageOverlay',
+            visible: true,
+            url: '/images/NDVI.jpg',
+            bounds: [[36.4895, -120.4647], [36.5235, -120.439]],
+            layerParams: {
+                transparent: true,
+                opacity: 0.4
             }
           }
         }
