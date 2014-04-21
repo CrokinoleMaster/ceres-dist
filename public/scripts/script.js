@@ -52,6 +52,11 @@ angular.module('ceresApp')
         lng: -120.452,
         zoom: 16
       },
+      soloHeat:{
+        lat: 37.895,
+        lng: -121.122,
+        zoom: 15
+      },
 
       layers: {
         baselayers: {
@@ -86,28 +91,57 @@ angular.module('ceresApp')
                 transparent: true,
                 opacity: 0.4
             }
+          },
+          soloHeat: {
+            name: 'Solo Heat',
+            type: 'imageOverlay',
+            visible: true,
+            url: '/images/solo_heat.png',
+            bounds: [[37.8794, -121.1396], [37.906532, -121.09050]],
+            layerParams: {
+              transparent: true,
+              opacity: 0.4
+            }
           }
         }
       },
-      legend: {
-          position: 'bottomleft',
-          colors: [ '#fff',
-                    '#EC0306',
-                    '#F16E04',
-                    '#FFAA04',
-                    '#F7F50D',
-                    '#BAF801',
-                    '#55FF00',
-                    '#3EA600' ],
-          labels: [ '<strong> NDVI </strong>',
-                    '-1 - -0.74',
-                    '-0.73 - -0.05',
-                    '-0.04 - -0.16',
-                    '0.17 - 0.37',
-                    '0.38 - 0.55',
-                    '0.56 - 0.68',
-                    '0.69 - 0.81']
+
+      legends:{
+        ndvi: {
+            position: 'bottomleft',
+            colors: [ '#fff',
+                      '#EC0306',
+                      '#F16E04',
+                      '#FFAA04',
+                      '#F7F50D',
+                      '#BAF801',
+                      '#55FF00',
+                      '#3EA600' ],
+            labels: [ '<strong> NDVI </strong>',
+                      '-1 - -0.74',
+                      '-0.73 - -0.05',
+                      '-0.04 - -0.16',
+                      '0.17 - 0.37',
+                      '0.38 - 0.55',
+                      '0.56 - 0.68',
+                      '0.69 - 0.81']
+        },
+        soloHeat: {
+            position: 'bottomleft',
+            colors: [ '#fff',
+                      'blue',
+                      'green',
+                      'yellow',
+                      'red' ],
+            labels: [ '<strong> Solo Heat </strong>',
+                      '67.5',
+                      '70.5',
+                      '73.5',
+                      '76.5']
+        },
+
       },
+
       defaults: {
         zoomControlPosition: 'bottomleft',
         touchZoom: false
