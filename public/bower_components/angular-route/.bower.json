@@ -1,7 +1,7 @@
 {
   "name": "angular-route",
   "version": "1.2.16",
-  "main": "./angular-route.js",
+  "main": "./angular-route.min.js",
   "dependencies": {
     "angular": "1.2.16"
   },
