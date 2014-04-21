@@ -80,14 +80,33 @@ angular.module('ceresApp')
             name: 'NDVI',
             type: 'imageOverlay',
             visible: true,
-            url: '/images/NDVI.jpg',
-            bounds: [[36.4895, -120.4647], [36.5235, -120.439]],
+            url: '/images/NDVI.png',
+            bounds: [[36.5007, -120.4715], [36.5239, -120.4291]],
             layerParams: {
                 transparent: true,
                 opacity: 0.4
             }
           }
         }
+      },
+      legend: {
+          position: 'bottomleft',
+          colors: [ '#fff',
+                    '#EC0306',
+                    '#F16E04',
+                    '#FFAA04',
+                    '#F7F50D',
+                    '#BAF801',
+                    '#55FF00',
+                    '#3EA600' ],
+          labels: [ '<strong> NDVI </strong>',
+                    '-1 - -0.74',
+                    '-0.73 - -0.05',
+                    '-0.04 - -0.16',
+                    '0.17 - 0.37',
+                    '0.38 - 0.55',
+                    '0.56 - 0.68',
+                    '0.69 - 0.81']
       },
       defaults: {
         zoomControlPosition: 'bottomleft',
