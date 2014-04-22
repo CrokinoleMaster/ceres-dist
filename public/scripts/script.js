@@ -46,22 +46,10 @@ $(function(){
 
 angular.module('ceresApp')
   .controller('DefaultMapController',
-  ['$scope', 'leafletData', 'UserMapsFactory', 'MapCentersFactory',
-  function($scope, leafletData, UserMapsFactory, MapCentersFactory){
+  ['$scope', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory', 'MapCentersFactory',
+  function($scope, leafletData, leafletLegendHelpers, UserMapsFactory, MapCentersFactory){
 
-    $scope.centerIndex = 0;
-    $scope.center = {lat: 36.51, lng: -120.452, zoom: 16 };
-    $scope.$watch('centerIndex', function (centerIndex) {
-      $scope.center = MapCentersFactory.getCenters()[centerIndex];
-    });
-    $scope.$watch(function(){return MapCentersFactory.getIndex(); },
-      function(index){
-        $scope.centerIndex = index;
-    });
-    $scope.$watch(function(){return MapCentersFactory.getCenters();},
-      function(centers){
-        $scope.centers = centers;
-    });
+    $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
 
     var userData;
     var baselayers = {
@@ -78,7 +66,19 @@ angular.module('ceresApp')
           userData = filterUser(response.data, Userbin.currentProfile().id)
           initUserMap();
           MapCentersFactory.setCenters(userData.centers);
-          MapCentersFactory.setIndex(0);
+
+          /* start watch */
+          $scope.$watch('centerIndex', function (centerIndex) {
+            $scope.center = MapCentersFactory.getCenters()[centerIndex];
+          });
+          $scope.$watch(function(){return MapCentersFactory.getIndex(); },
+            function(index){
+              $scope.centerIndex = index;
+          });
+          $scope.$watch(function(){return MapCentersFactory.getCenters();},
+            function(centers){
+              $scope.centers = centers;
+          });
         });
     }
 
@@ -92,12 +92,17 @@ angular.module('ceresApp')
     function initUserMap(){
       var layers = {
         baselayers: baselayers,
-        overlays: userData.overlays,
+        overlays: userData.overlays
       };
       angular.extend($scope, {
         layers: layers
       });
+      Object.keys(layers.overlays).forEach(function(key){
+        $scope.addLegend(layers.overlays[key].legend);
+      });
     }
+
+    /* calling init functions */
 
     getUser();
     angular.extend($scope, {
@@ -112,7 +117,14 @@ angular.module('ceresApp')
 
     leafletData.getMap().then(function(map) {
       map.touchZoom.disable();
+      $scope.addLegend = function(value){
+          var legend = L.control({ position: 'bottomleft' });
+          legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
+          legend.addTo(map);
+      }
     });
+
+
 
 }]);
 
@@ -163,7 +175,7 @@ angular.module('ceresApp')
 
 angular.module('ceresApp')
   .factory('MapCentersFactory', [function(){
-    var index = 1;
+    var index = 0;
     var centers =[{ lat: 37.895, lng: -121.122, zoom: 10}];
 
     return{

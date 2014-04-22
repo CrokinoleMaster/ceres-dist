@@ -1,4 +1,4 @@
-#index-container
+#index-container(ng-controller='DefaultMapController')
     section.main-section.medium-12.text-center
-        div#map-container(ng-controller='DefaultMapController')
+        div#map-container
             leaflet(center='center' layers='layers' defaults='defaults')
