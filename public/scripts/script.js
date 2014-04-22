@@ -45,117 +45,82 @@ $(function(){
 ;'use strict';
 
 angular.module('ceresApp')
-  .controller('DefaultMapController', ['$scope', 'leafletData', function($scope, leafletData){
-    angular.extend($scope, {
-      america: {
-        lat: 36.51,
-        lng: -120.452,
-        zoom: 16
-      },
-      soloHeat:{
-        lat: 37.895,
-        lng: -121.122,
-        zoom: 15
-      },
+  .controller('DefaultMapController',
+  ['$scope', 'leafletData', 'UserMapsFactory', 'MapCentersFactory',
+  function($scope, leafletData, UserMapsFactory, MapCentersFactory){
 
-      layers: {
-        baselayers: {
+    $scope.centerIndex = 0;
+    $scope.center = {lat: 36.51, lng: -120.452, zoom: 16 };
+    $scope.$watch('centerIndex', function (centerIndex) {
+      $scope.center = MapCentersFactory.getCenters()[centerIndex];
+    });
+    $scope.$watch(function(){return MapCentersFactory.getIndex(); },
+      function(index){
+        $scope.centerIndex = index;
+    });
+    $scope.$watch(function(){return MapCentersFactory.getCenters();},
+      function(centers){
+        $scope.centers = centers;
+    });
+
+    var userData;
+    var baselayers = {
           googleRoadmap: {
             name: 'Google Satelite',
             layerType: 'SATELLITE',
             type: 'google'
-          },
-          osm: {
-            name: 'Huarui\s map',
-            url: 'http://api.tiles.mapbox.com/v3/huaruiwu.i0ka23ad/{z}/{x}/{y}.png',
-            type: 'xyz'
-          },
-          cloudmade2: {
-            name: 'Cloudmade Tourist',
-            type: 'xyz',
-            url: 'http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png',
-            layerParams: {
-              key: '007b9471b4c74da4a6ec7ff43552b16f',
-              styleId: 7
-            }
           }
-        },
-        overlays: {
-          ndvi: {
-            name: 'NDVI',
-            type: 'imageOverlay',
-            visible: true,
-            url: '/images/NDVI.png',
-            bounds: [[36.5007, -120.4715], [36.5239, -120.4291]],
-            layerParams: {
-                transparent: true,
-                opacity: 0.4
-            }
-          },
-          soloHeat: {
-            name: 'Solo Heat',
-            type: 'imageOverlay',
-            visible: true,
-            url: '/images/solo_heat.png',
-            bounds: [[37.8794, -121.1396], [37.906532, -121.09050]],
-            layerParams: {
-              transparent: true,
-              opacity: 0.4
-            }
-          }
-        }
+        };
+
+    function getUser(){
+      UserMapsFactory.getMap()
+        .then(function(response){
+          userData = filterUser(response.data, Userbin.currentProfile().id)
+          initUserMap();
+          MapCentersFactory.setCenters(userData.centers);
+          MapCentersFactory.setIndex(0);
+        });
+    }
+
+    function filterUser(mapData, id){
+      var data = mapData.filter(function(user) {
+        return user.id === id;
+      })[0];
+      return data;
+    }
+
+    function initUserMap(){
+      var layers = {
+        baselayers: baselayers,
+        overlays: userData.overlays,
+      };
+      angular.extend($scope, {
+        layers: layers
+      });
+    }
+
+    getUser();
+    angular.extend($scope, {
+      layers: {
+        baselayers: baselayers
       },
-
-      legends:{
-        ndvi: {
-            position: 'bottomleft',
-            colors: [ '#fff',
-                      '#EC0306',
-                      '#F16E04',
-                      '#FFAA04',
-                      '#F7F50D',
-                      '#BAF801',
-                      '#55FF00',
-                      '#3EA600' ],
-            labels: [ '<strong> NDVI </strong>',
-                      '-1 - -0.74',
-                      '-0.73 - -0.05',
-                      '-0.04 - -0.16',
-                      '0.17 - 0.37',
-                      '0.38 - 0.55',
-                      '0.56 - 0.68',
-                      '0.69 - 0.81']
-        },
-        soloHeat: {
-            position: 'bottomleft',
-            colors: [ '#fff',
-                      'blue',
-                      'green',
-                      'yellow',
-                      'red' ],
-            labels: [ '<strong> Solo Heat </strong>',
-                      '67.5',
-                      '70.5',
-                      '73.5',
-                      '76.5']
-        },
-
-      },
-
       defaults: {
         zoomControlPosition: 'bottomleft',
         touchZoom: false
-      }
+      },
     });
+
     leafletData.getMap().then(function(map) {
       map.touchZoom.disable();
     });
 
 }]);
+
 ;'use strict';
 
 angular.module('ceresApp')
   .controller('IndexController', ['$scope', '$location', function($scope, $location){
+
 
 }]);;'use strict';
 
@@ -178,4 +143,56 @@ angular.module('ceresApp')
         $scope.$apply();
         $scope.$apply(function() { $location.path("/index"); });
     });
+}]);;'use strict';
+
+angular.module('ceresApp')
+  .controller('MenuController', ['$scope', '$location', 'MapCentersFactory',
+    function($scope, $location, MapCentersFactory){
+
+      $scope.$watch(function(){return MapCentersFactory.getIndex(); },
+        function(index){
+          $scope.centerIndex = index;
+      });
+      $scope.getCenters = MapCentersFactory.getCenters;
+      $scope.moveCenter = function(index) {
+        MapCentersFactory.setIndex(index);
+        $scope.centerIndex = index;
+      }
+
+}]);;'use strict';
+
+angular.module('ceresApp')
+  .factory('MapCentersFactory', [function(){
+    var index = 1;
+    var centers =[{ lat: 37.895, lng: -121.122, zoom: 10}];
+
+    return{
+      getCenters: function(){
+        return centers;
+      },
+      setCenters: function(value){
+        centers = value;
+      },
+      getIndex: function(){
+        return index;
+      },
+      setIndex: function(value){
+        index = value;
+      }
+    }
+
+}]);;'use strict';
+
+angular.module('ceresApp')
+  .factory('UserMapsFactory', ['$http', function($http){
+
+    var url = '/api/maps';
+    var MapFactory = {};
+
+    MapFactory.getMap = function (id) {
+        return $http.get(url);
+    };
+
+    return MapFactory;
+
 }]);

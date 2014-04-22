@@ -1,14 +1,14 @@
 extends layout
 
 block body
-    div#menus
+    div#menus(ng-controller='MenuController')
         nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
             ul.title-area
                 li.name
                     h1
                         a(href='#') Ceres imaging
                 li.toggle-topbar.menu-icon
-                    a(href='#') menu
+                    a menu
             section.top-bar-section
                 ul.right
                     li.has-dropdown
@@ -17,25 +17,23 @@ block body
                             li
                                 a(href='#') first link
                     li.active
-                        a(rel='logout') logout
+                        a.exit-off-canvas(rel='logout') logout
                 ul.left
                     li
                         a(href='#') button
 
         .off-canvas-wrap(data-offcanvas)
             .inner-wrap
-                a.left-off-canvas-toggle.menu-icon(href='#' ng-cloak ng-show='user.currentProfile')
+                a.left-off-canvas-toggle.menu-icon( ng-cloak ng-show='user.currentProfile')
                     span
                         #menu-icon
-                            i.el-icon-th-list
+                            i.el-icon-th-list   farms
 
                 section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
                     ul.off-canvas-list
                         li
                             label Maps
-                        li
-                            a(href='#') first map
-                        li
-                            a(href='#') second map
+                        li( ng-repeat='center in getCenters()')
+                            a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') Map {{$index+1}}
                 section.main-section
-                div(ng-view)
+                    div(ng-view)
