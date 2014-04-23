@@ -111,7 +111,8 @@ angular.module('ceresApp')
       },
       defaults: {
         zoomControlPosition: 'bottomleft',
-        touchZoom: false
+        touchZoom: false,
+        maxZoom: 17,
       },
     });
 
