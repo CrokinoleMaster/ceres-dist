@@ -10,6 +10,7 @@ angular.module('ceresApp', [
     }).when('/index', {
         templateUrl: 'partials/index',
         controller: 'IndexController',
+        reloadOnSearch: false
     }).otherwise({
         redirectTo: '/'
     });
@@ -46,8 +47,8 @@ $(function(){
 
 angular.module('ceresApp')
   .controller('DefaultMapController',
-  ['$scope', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory', 'MapCentersFactory',
-  function($scope, leafletData, leafletLegendHelpers, UserMapsFactory, MapCentersFactory){
+  ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory', 'MapCentersFactory',
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapCentersFactory){
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
 
@@ -100,6 +101,19 @@ angular.module('ceresApp')
       Object.keys(layers.overlays).forEach(function(key){
         $scope.addLegend(layers.overlays[key].legend);
       });
+
+      /* add hashing for forward and back between maps */
+      $scope.$on("centerUrlHash", function(event, centerHash) {
+        var center = MapCentersFactory
+                  .getCenters()[$scope.centerIndex];
+        var lat = center.lat.toFixed(4).toString();
+        var lng = center.lng.toFixed(4).toString();
+        var zoom = center.zoom.toString();
+        if (centerHash === lat+':'+lng+':'+zoom ){
+          $location.search({ c: centerHash });
+          $location.hash('map_'+($scope.centerIndex+1) );
+        }
+      });
     }
 
     /* calling init functions */
@@ -125,7 +139,6 @@ angular.module('ceresApp')
           legend.addTo(map);
       }
     });
-
 
 
 }]);
@@ -169,10 +182,15 @@ angular.module('ceresApp')
       });
       $scope.getCenters = MapCentersFactory.getCenters;
       $scope.moveCenter = function(index) {
+        var center = MapCentersFactory.getCenters()[index];
+        var lat = center.lat;
+        var lng = center.lng;
         MapCentersFactory.setIndex(index);
         $scope.centerIndex = index;
-      }
 
+
+        // $location.search({ c: lat+':'+lng });
+      }
 }]);;'use strict';
 
 angular.module('ceresApp')
