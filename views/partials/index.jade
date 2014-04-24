@@ -1,4 +1,40 @@
-#index-container(ng-controller='DefaultMapController')
-    section.main-section.medium-12.text-center
-        div#map-container
-            leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')
+div#menus(ng-controller='DefaultMapController')
+    nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
+        ul.title-area
+            li.name
+                h1
+                    a(href='#') Ceres imaging
+            li.toggle-topbar.menu-icon
+                a menu
+        section.top-bar-section
+            ul.right
+                li.has-dropdown
+                    a(href='#') settings
+                    ul.dropdown
+                        li
+                            a(href='#') first link
+                li.active
+                    a.exit-off-canvas(href='#' rel='logout') logout
+            ul.left
+                li
+                    a button
+
+
+    .off-canvas-wrap(data-offcanvas)
+        .inner-wrap
+            a.left-off-canvas-toggle.menu-icon( ng-cloak ng-show='user.currentProfile')
+                span
+                    #menu-icon
+                        i.el-icon-th-list   farms
+
+            section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
+                ul.off-canvas-list
+                    li
+                        label Maps
+                    li( ng-repeat='center in centers')
+                        a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') Map {{$index+1}}
+            section.main-section
+                #index-container()
+                    section.main-section.medium-12.text-center
+                        div#map-container
+                            leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')

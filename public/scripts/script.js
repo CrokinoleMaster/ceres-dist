@@ -47,10 +47,16 @@ $(function(){
 
 angular.module('ceresApp')
   .controller('DefaultMapController',
-  ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory', 'MapCentersFactory',
-  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapCentersFactory){
+  ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory){
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
+    $scope.centerIndex = 0;
+
+    $scope.moveCenter = function(i){
+      $scope.centerIndex = i;
+      $scope.center = $scope.centers[i];
+    }
 
     var userData;
     var baselayers = {
@@ -66,20 +72,6 @@ angular.module('ceresApp')
         .then(function(response){
           userData = filterUser(response.data, Userbin.currentProfile().id)
           initUserMap();
-          MapCentersFactory.setCenters(userData.centers);
-
-          /* start watch */
-          $scope.$watch('centerIndex', function (centerIndex) {
-            $scope.center = MapCentersFactory.getCenters()[centerIndex];
-          });
-          $scope.$watch(function(){return MapCentersFactory.getIndex(); },
-            function(index){
-              $scope.centerIndex = index;
-          });
-          $scope.$watch(function(){return MapCentersFactory.getCenters();},
-            function(centers){
-              $scope.centers = centers;
-          });
         });
     }
 
@@ -93,10 +85,12 @@ angular.module('ceresApp')
     function initUserMap(){
       var layers = {
         baselayers: baselayers,
-        overlays: userData.overlays
+        overlays: userData.dates.slice(-1)[0].overlays
       };
       angular.extend($scope, {
-        layers: layers
+        layers: layers,
+        centers: userData.centers,
+        center: userData.centers[0]
       });
       Object.keys(layers.overlays).forEach(function(key){
         $scope.addLegend(layers.overlays[key].legend);
@@ -104,8 +98,7 @@ angular.module('ceresApp')
 
       /* add hashing for forward and back between maps */
       $scope.$on("centerUrlHash", function(event, centerHash) {
-        var center = MapCentersFactory
-                  .getCenters()[$scope.centerIndex];
+        var center = $scope.centers[$scope.centerIndex];
         var lat = center.lat.toFixed(4).toString();
         var lng = center.lng.toFixed(4).toString();
         var zoom = center.zoom.toString();
@@ -189,30 +182,7 @@ angular.module('ceresApp')
         $scope.centerIndex = index;
 
 
-        // $location.search({ c: lat+':'+lng });
       }
-}]);;'use strict';
-
-angular.module('ceresApp')
-  .factory('MapCentersFactory', [function(){
-    var index = 0;
-    var centers =[{ lat: 37.895, lng: -121.122, zoom: 10}];
-
-    return{
-      getCenters: function(){
-        return centers;
-      },
-      setCenters: function(value){
-        centers = value;
-      },
-      getIndex: function(){
-        return index;
-      },
-      setIndex: function(value){
-        index = value;
-      }
-    }
-
 }]);;'use strict';
 
 angular.module('ceresApp')
