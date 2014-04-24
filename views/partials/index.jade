@@ -17,8 +17,9 @@ div#menus(ng-controller='DefaultMapController')
                     a.exit-off-canvas(href='#' rel='logout') logout
             ul.left
                 li
-                    a button
-
+                    a date
+                li
+                    select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
 
     .off-canvas-wrap(data-offcanvas)
         .inner-wrap

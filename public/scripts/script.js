@@ -52,10 +52,29 @@ angular.module('ceresApp')
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     $scope.centerIndex = 0;
+    $scope.legend = [];
 
     $scope.moveCenter = function(i){
       $scope.centerIndex = i;
       $scope.center = $scope.centers[i];
+    }
+
+    function watches(){
+      $scope.$watch('currentDate', function(newvalue){
+        $scope.dates.forEach(function(i){
+          if (i.date === newvalue){
+            $scope.layers.overlays = i.overlays;
+            // remove legends
+              $scope.legend.forEach(function(l, i){
+                l.removeFrom($scope.leaflet);
+                $scope.legend.splice(i,1);
+              });
+            // new legend
+            var overlay = $scope.layers.overlays[Object.keys($scope.layers.overlays)[0]];
+            $scope.addLegend(overlay.legend, overlay.name);
+          }
+        })
+      });
     }
 
     var userData;
@@ -72,6 +91,8 @@ angular.module('ceresApp')
         .then(function(response){
           userData = filterUser(response.data, Userbin.currentProfile().id)
           initUserMap();
+          userData = null;
+          watches();
         });
     }
 
@@ -90,10 +111,9 @@ angular.module('ceresApp')
       angular.extend($scope, {
         layers: layers,
         centers: userData.centers,
-        center: userData.centers[0]
-      });
-      Object.keys(layers.overlays).forEach(function(key){
-        $scope.addLegend(layers.overlays[key].legend);
+        center: userData.centers[0],
+        dates: userData.dates,
+        currentDate: userData.dates.slice(-1)[0].date
       });
 
       /* add hashing for forward and back between maps */
@@ -125,14 +145,39 @@ angular.module('ceresApp')
     });
 
     leafletData.getMap().then(function(map) {
-      map.touchZoom.disable();
-      $scope.addLegend = function(value){
-          var legend = L.control({ position: 'bottomleft' });
-          legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
-          legend.addTo(map);
-      }
-    });
+      $scope.leaflet = map;
 
+      map.touchZoom.disable();
+      $scope.addLegend = function(value, name){
+        // if ($scope.legend && $scope.legend.removeFrom) $scope.legend.removeFrom(map);
+        var legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
+        legend.addTo(map);
+        legend.name = name;
+        $scope.legend.push(legend);
+      }
+      map.on('overlayadd', function(eventLayer){
+        var overlays = $scope.layers.overlays;
+        overlays = $.map(overlays, function(val, i){
+          return [val];
+        });
+        var overlay = overlays.filter(function(o){
+          return o.name == eventLayer.name;
+        });
+        if (overlay[0]) $scope.addLegend(overlay[0].legend, overlay[0].name);
+      });
+      map.on('overlayremove', function(eventLayer){
+        if ($scope.legend[0]){
+          $scope.legend.forEach(function(l, i){
+            if (l.name == eventLayer.name){
+              l.removeFrom(map);
+              $scope.legend.splice(i,1);
+            }
+          });
+        }
+      })
+
+    });
 
 }]);
 
