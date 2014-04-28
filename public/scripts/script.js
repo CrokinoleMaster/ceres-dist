@@ -89,18 +89,11 @@ angular.module('ceresApp')
     function getUser(){
       UserMapsFactory.getMap()
         .then(function(response){
-          userData = filterUser(response.data, Userbin.currentProfile().id)
+          userData = response.data
           initUserMap();
           userData = null;
           watches();
         });
-    }
-
-    function filterUser(mapData, id){
-      var data = mapData.filter(function(user) {
-        return user.id === id;
-      })[0];
-      return data;
     }
 
     function initUserMap(){
@@ -233,11 +226,11 @@ angular.module('ceresApp')
 angular.module('ceresApp')
   .factory('UserMapsFactory', ['$http', function($http){
 
-    var url = '/api/maps';
+    var url = '/api/maps/';
     var MapFactory = {};
 
     MapFactory.getMap = function (id) {
-        return $http.get(url);
+        return $http.get(url+Userbin.currentProfile().id);
     };
 
     return MapFactory;
