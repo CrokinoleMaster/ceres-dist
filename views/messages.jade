@@ -1,0 +1,6 @@
+if flash
+  div.alert( class='#{flash.name}' )
+    ul
+    - for ( var i=0; i < flash.messages.length; i++ )
+        li #{flash.messages[i].msg}
+    ul

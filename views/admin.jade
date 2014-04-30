@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title Ceres Imagin Admin
+    link(rel='stylesheet', href='//cdn.kendostatic.com/2014.1.318/styles/kendo.common.min.css')
+    link(rel='stylesheet', href='//cdn.kendostatic.com/2014.1.318/styles/kendo.bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+  body
+    .login.well
+      h1 Please log in
+      hr
+      form#login-form( method='POST', action='/login' novalidate)
+        .form-group
+          label( for='name' ) Username
+          input#username.form-control( type='email' name='username' placeholder='Enter Username' data-required-msg='Username is required' required)
+        .form-group
+          lable( for='password' ) Password
+          input#password.form-control( type='password' name='password' placeholder='Enter Password' data-required-msg='Password is required' required)
+        .form-group
+          button.btn.btn-default Login
+        include messages
+    script( src='//code.jquery.com/jquery-1.11.0.min.js' )
+    script( src='//cdn.kendostatic.com/2014.1.318/js/kendo.all.min.js' )
+    script.
+      $(function(){
+        $('#login-form').kendoValidator().data('kendoValidator');
+      });
