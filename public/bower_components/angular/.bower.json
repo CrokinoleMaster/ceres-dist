@@ -1,7 +1,7 @@
 {
   "name": "angular",
   "version": "1.2.16",
-  "main": "./angular.min.js",
+  "main": "./angular.js",
   "dependencies": {},
   "homepage": "https://github.com/angular/bower-angular",
   "_release": "1.2.16",

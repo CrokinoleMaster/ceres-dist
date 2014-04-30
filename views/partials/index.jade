@@ -20,13 +20,14 @@ div#menus(ng-controller='DefaultMapController')
                     a date
                 li
                     select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
+                li
 
     .off-canvas-wrap(data-offcanvas)
         .inner-wrap
             a.left-off-canvas-toggle.menu-icon( ng-cloak ng-show='user.currentProfile')
                 span
                     #menu-icon
-                        i.el-icon-th-list   farms
+                        i.el-icon-th-list    fields
 
             section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
                 ul.off-canvas-list
@@ -35,7 +36,12 @@ div#menus(ng-controller='DefaultMapController')
                     li( ng-repeat='center in centers')
                         a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') Map {{$index+1}}
             section.main-section
-                #index-container()
+                #index-container
                     section.main-section.medium-12.text-center
                         div#map-container
                             leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')
+                #rss(ng-controller='RssController')
+                    #menu-icon(ng-click="loadFeed()")
+                        i.el-icon-rss  RSS
+                    p(ng-show="feedDisplay").
+                        {{feed}}

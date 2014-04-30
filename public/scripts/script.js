@@ -224,6 +224,35 @@ angular.module('ceresApp')
 }]);;'use strict';
 
 angular.module('ceresApp')
+  .controller('RssController', ['$scope', 'FeedService', function($scope, FeedService){
+    $scope.feedSrc = 'http://w1.weather.gov/xml/current_obs/KOAK.rss';
+    $scope.feedDisplay = false;
+    $scope.loadFeed = function( e ){
+      FeedService.parseFeed($scope.feedSrc).then(function(res){
+        $scope.feed = res.data.responseData.feed.entries[0];
+        var i = ($scope.feed.content.indexOf('<br>'));
+        $scope.feed = $scope.feed.content.slice(i+4);
+      })
+        $scope.feedDisplay = !$scope.feedDisplay;
+    }
+
+}]);
+;'use strict';
+
+angular.module('ceresApp')
+  .factory('FeedService', ['$http', function($http){
+    return {
+      parseFeed: function(url){
+        return $http.jsonp('//ajax.googleapis.com/ajax/services/feed/'+
+          'load?v=1.0&num=50&callback=JSON_CALLBACK&q=' +
+          encodeURIComponent(url));
+      }
+    }
+
+}]);
+;'use strict';
+
+angular.module('ceresApp')
   .factory('UserMapsFactory', ['$http', function($http){
 
     var url = '/api/maps/';
