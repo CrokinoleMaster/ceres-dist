@@ -14,7 +14,8 @@
     "lodash": "~2.4.1",
     "jade": "~1.2.0",
     "mongodb": "*",
-    "mongoskin": "*"
+    "mongoskin": "*",
+    "express-validator": "~2.1.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
