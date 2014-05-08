@@ -37,6 +37,7 @@ $(function(){
       var self = this;
       var search = $('#usersearch');
       var btn = $('#search-btn');
+      var newBtn = $('#new-btn');
       var update = $('#update-btn');
       this.getNames().done(function(){
         search.autocomplete({
@@ -45,28 +46,60 @@ $(function(){
         btn.on('click', function(e){
           e.preventDefault();
           if ( self.names.indexOf(search.val()) < 0 ){
+            alert('that user does not exist');
             search.val('');
           } else {
             self.selected = search.val();
             self.showUserData();
           }
         });
+        newBtn.on('click', function(e){
+          e.preventDefault();
+          if ( self.names.indexOf(search.val()) < 0 ){
+            self.selected = search.val();
+            self.userdata = {name: self.selected, center: null};
+            $('#editor-holder').jsonEditor(self.userdata, { change: function(data) {
+              self.userdata = data;
+            }});
+          } else {
+            alert('that user already exists');
+            search.val('');
+          }
+        });
         update.on('click', function(e){
           e.preventDefault();
-          $.ajax({
-            type: 'POST',
-            url: 'user/'+self.selected,
-            data: self.userdata,
-            success: function(data){
-              $('#notification').html('update successful');
-              self.selected = data.name;
-              self.update();
-            },
-            error: function(error){
-              $('#notification').html(error);
-            },
-            dataType: 'json'
-          });
+          $('#notification').empty();
+          if (self.names.indexOf(search.val()) >= 0) {
+            $.ajax({
+              type: 'POST',
+              url: 'user/'+self.selected,
+              data: self.userdata,
+              success: function(data){
+                $('#notification').html('update successful');
+                self.selected = data.name;
+                self.update();
+              },
+              error: function(error){
+                $('#notification').html(error);
+              },
+              dataType: 'json'
+            });
+          } else {
+            $.ajax({
+              type: 'POST',
+              url: 'user/create',
+              data: self.userdata,
+              success: function(data){
+                $('#notification').html('create successful');
+                self.selected = data.name;
+                self.update();
+              },
+              error: function(error){
+                $('#notification').html(error);
+              },
+              dataType: 'json'
+            });
+          }
         });
       });
     }
