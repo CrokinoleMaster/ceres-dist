@@ -8,7 +8,7 @@
     "leaflet"
   ],
   "main": [
-    "/angular-leaflet-directive.min.js"
+    "/dist/angular-leaflet-directive.js"
   ],
   "dependencies": {
     "angular": "1.2.x",
