@@ -54,15 +54,10 @@ angular.module('ceresApp')
     $scope.centerIndex = 0;
     $scope.legend = [];
     $scope.opacities = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
-    $scope.currentOpacity = 0.6;
 
     $scope.moveCenter = function(i){
       $scope.centerIndex = i;
       $scope.center = $scope.centers[i];
-    }
-
-    $scope.changeOpacity = function(){
-      $scope.layers.overlays.NDVI.layerOptions.opacity = 0.2;
     }
 
     function watches(){
@@ -78,20 +73,7 @@ angular.module('ceresApp')
             // new legend
             var overlay = $scope.layers.overlays[Object.keys($scope.layers.overlays)[0]];
             $scope.addLegend(overlay.legend, overlay.name);
-            //change opacity to current opacity
-            var keys = Object.keys($scope.layers.overlays);
-            keys.forEach(function(key){
-              console.log(key);
-              console.log($scope.layers.overlays[key].layerParams);
-              $scope.layers.overlays[key].layerParams.opacity = $scope.currentOpacity;
-            })
           }
-        })
-      });
-      $scope.$watch('currentOpacity', function(value){
-        var keys = Object.keys($scope.layers.overlays);
-        keys.forEach(function(key){
-          $scope.layers.overlays[key].layerOptions.opacity = value;
         })
       });
     }

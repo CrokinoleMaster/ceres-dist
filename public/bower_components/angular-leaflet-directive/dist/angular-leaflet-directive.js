@@ -608,11 +608,12 @@
                 }
               }
                 // check for the .visible property to hide/show overLayers
-                if (newOverlayLayers[newName].visible && !map.hasLayer(leafletLayers.overlays[newName])) {
-                  map.addLayer(leafletLayers.overlays[newName]);
-                } else if (newOverlayLayers[newName].visible === false && map.hasLayer(leafletLayers.overlays[newName])) {
-                  map.removeLayer(leafletLayers.overlays[newName]);
-                }
+                // if (newOverlayLayers[newName].visible && !map.hasLayer(leafletLayers.overlays[newName])) {
+                //   map.addLayer(leafletLayers.overlays[newName]);
+                // }
+                // else if (newOverlayLayers[newName].visible === false && map.hasLayer(leafletLayers.overlays[newName])) {
+                //   map.removeLayer(leafletLayers.overlays[newName]);
+                // }
               }
               // Only add the layers switch selector control if we have more than one baselayer + overlay
               isLayersControlVisible = updateLayersControl(map, mapId, isLayersControlVisible, layers.baselayers, newOverlayLayers, leafletLayers);
