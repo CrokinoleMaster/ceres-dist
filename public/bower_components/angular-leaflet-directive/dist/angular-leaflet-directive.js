@@ -573,7 +573,7 @@
             leafletScope.$watch('layers.overlays', function (newOverlayLayers) {
               // Delete layers from the array
               for (var name in leafletLayers.overlays) {
-                if (!isDefined(newOverlayLayers[name])) {
+                if (!isDefined(newOverlayLayers[name]) || newOverlayLayers[name].url !== leafletLayers.overlays[name]._url) {
                   // Remove from the map if it's on it
                   if (map.hasLayer(leafletLayers.overlays[name])) {
                     map.removeLayer(leafletLayers.overlays[name]);
@@ -594,19 +594,19 @@
                   }
                 }
                 //added for opacity changes
-                  else {
-                if (newOverlayLayers[newName].layerOptions && newOverlayLayers[newName].layerOptions.opacity) {
-                  if (leafletLayers.overlays[newName].options.opacity != newOverlayLayers[newName].layerOptions.opacity) {
-                    leafletLayers.overlays[newName].setOpacity(newOverlayLayers[newName].layerOptions.opacity);
+                else {
+                  if (newOverlayLayers[newName].layerOptions && newOverlayLayers[newName].layerOptions.opacity) {
+                    if (leafletLayers.overlays[newName].options.opacity != newOverlayLayers[newName].layerOptions.opacity) {
+                      leafletLayers.overlays[newName].setOpacity(newOverlayLayers[newName].layerOptions.opacity);
+                    }
                   }
-                }
 
-                if (newOverlayLayers[newName].layerOptions && newOverlayLayers[newName].layerOptions.zIndex) {
-                  if (leafletLayers.overlays.options.zIndex != newOverlayLayers[newName].layerOptions.zIndex) {
-                    leafletLayers.overlays.setZIndex(newOverlayLayers[newName].layerOptions.zIndex);
+                  if (newOverlayLayers[newName].layerOptions && newOverlayLayers[newName].layerOptions.zIndex) {
+                    if (leafletLayers.overlays.options.zIndex != newOverlayLayers[newName].layerOptions.zIndex) {
+                      leafletLayers.overlays.setZIndex(newOverlayLayers[newName].layerOptions.zIndex);
+                    }
                   }
                 }
-              }
                 // check for the .visible property to hide/show overLayers
                 // if (newOverlayLayers[newName].visible && !map.hasLayer(leafletLayers.overlays[newName])) {
                 //   map.addLayer(leafletLayers.overlays[newName]);

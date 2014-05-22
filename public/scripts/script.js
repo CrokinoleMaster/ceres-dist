@@ -52,7 +52,47 @@ angular.module('ceresApp')
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     $scope.centerIndex = 0;
-    $scope.legend = [];
+    function initLegends(){
+      $scope.legendNDVI = $scope.addLegend({
+              position: "bottomleft",
+              colors: [
+                "black",
+                "pink",
+                "fuschia",
+                "brown",
+                "lightgreen",
+                "green"
+              ],
+              labels: [
+                "<strong> NDVI </strong>",
+                "0.335-0.564",
+                "0.565-0.58",
+                "0.581-0.593",
+                "0.594-0.622",
+                "0.623-0.635"
+              ]
+            }, 'NDVI');
+      $scope.legendTemp = $scope.addLegend({
+              position: "bottomleft",
+              colors: [
+                "black",
+                "pink",
+                "fuschia",
+                "brown",
+                "lightgreen",
+                "green"
+              ],
+              labels: [
+                "<strong> Temperature </strong>",
+                "0.335-0.564",
+                "0.565-0.58",
+                "0.581-0.593",
+                "0.594-0.622",
+                "0.623-0.635"
+              ]
+            }, 'temperature');
+    }
+
     $scope.opacities = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
 
     $scope.moveCenter = function(i){
@@ -65,14 +105,6 @@ angular.module('ceresApp')
         $scope.dates.forEach(function(i){
           if (i.date === newvalue){
             $scope.layers.overlays = i.overlays;
-            // remove legends
-              $scope.legend.forEach(function(l, i){
-                l.removeFrom($scope.leaflet);
-                $scope.legend.splice(i,1);
-              });
-            // new legend
-            var overlay = $scope.layers.overlays[Object.keys($scope.layers.overlays)[0]];
-            $scope.addLegend(overlay.legend, overlay.name);
           }
         })
       });
@@ -140,36 +172,31 @@ angular.module('ceresApp')
 
     leafletData.getMap().then(function(map) {
       $scope.leaflet = map;
-
-      map.touchZoom.disable();
       $scope.addLegend = function(value, name){
-        // if ($scope.legend && $scope.legend.removeFrom) $scope.legend.removeFrom(map);
         var legend = L.control({ position: 'bottomleft' });
         legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
         legend.addTo(map);
         legend.name = name;
-        $scope.legend.push(legend);
+        return legend;
       }
-      map.on('overlayadd', function(eventLayer){
-        var overlays = $scope.layers.overlays;
-        overlays = $.map(overlays, function(val, i){
-          return [val];
-        });
-        var overlay = overlays.filter(function(o){
-          return o.name == eventLayer.name;
-        });
-        if (overlay[0]) $scope.addLegend(overlay[0].legend, overlay[0].name);
-      });
-      map.on('overlayremove', function(eventLayer){
-        if ($scope.legend[0]){
-          $scope.legend.forEach(function(l, i){
-            if (l.name == eventLayer.name){
-              l.removeFrom(map);
-              $scope.legend.splice(i,1);
-            }
-          });
-        }
-      })
+      initLegends();
+
+      map.touchZoom.disable();
+
+      // map.on('overlayadd', function(eventLayer){
+      //   if (eventLayer.name === "NDVI"){
+      //     $scope.legendNDVI.addTo($scope.leaflet);
+      //   } else {
+      //     $scope.legendTemp.addTo($scope.leaflet);
+      //   }
+      // });
+      // map.on('overlayremove', function(eventLayer){
+      //   if (eventLayer.name === 'NDVI'){
+      //     $scope.legendNDVI.removeFrom($scope.leaflet);
+      //   } else if (eventLayer.name === 'Temperature'){
+      //     $scope.legendTemp.removeFrom($scope.leaflet);
+      //   }
+      // })
 
     });
 
