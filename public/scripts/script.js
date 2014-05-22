@@ -56,39 +56,37 @@ angular.module('ceresApp')
       $scope.legendNDVI = $scope.addLegend({
               position: "bottomleft",
               colors: [
-                "black",
-                "pink",
-                "fuschia",
-                "brown",
-                "lightgreen",
-                "green"
+                "white",
+                "red",
+                "green",
+                "yellow",
+                "blue",
               ],
               labels: [
-                "<strong> NDVI </strong>",
-                "0.335-0.564",
-                "0.565-0.58",
-                "0.581-0.593",
-                "0.594-0.622",
-                "0.623-0.635"
+                "<strong> Temperature </strong>",
+                "High stress",
+                "Moderate stress",
+                "Low stress",
+                "Well-watered"
               ]
             }, 'NDVI');
       $scope.legendTemp = $scope.addLegend({
               position: "bottomleft",
               colors: [
-                "black",
-                "pink",
-                "fuschia",
-                "brown",
+                "white",
+                "red",
+                "orange",
+                "yellow",
                 "lightgreen",
-                "green"
+                "green",
               ],
               labels: [
-                "<strong> Temperature </strong>",
-                "0.335-0.564",
-                "0.565-0.58",
-                "0.581-0.593",
-                "0.594-0.622",
-                "0.623-0.635"
+                "<strong> NDVI </strong>",
+                "Low vigor",
+                ".        ",
+                ".         ",
+                ".        ",
+                "High vigor"
               ]
             }, 'temperature');
     }
