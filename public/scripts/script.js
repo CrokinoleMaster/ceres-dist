@@ -261,6 +261,7 @@ angular.module('ceresApp')
       })
         $scope.feedDisplay = !$scope.feedDisplay;
     }
+    $scope.loadFeed();
 
 }]);
 ;'use strict';
