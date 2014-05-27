@@ -321,7 +321,7 @@
 body.ngrs-touching {
   -ms-touch-action: none;
 }
-;@font-face {
+ @font-face {
     font-family: 'Elusive-Icons';
     src:url('../../fonts/Elusive-Icons.eot');
     src:url('../../fonts/Elusive-Icons.eot?#iefix') format('embedded-opentype'),

@@ -44,7 +44,7 @@ $(function(){
         $('.inner-wrap').css('width', $(window).width()+'px');
     });
 });
-;'use strict';
+ 'use strict';
 
 angular.module('ceresApp')
   .controller('DefaultMapController',
@@ -199,18 +199,18 @@ angular.module('ceresApp')
 
 }]);
 
-;'use strict';
+ 'use strict';
 
 angular.module('ceresApp')
   .controller('IndexController', ['$scope', '$location', function($scope, $location){
 
 
-}]);;'use strict';
+}]); 'use strict';
 
 angular.module('ceresApp')
   .controller('LoginController', ['$scope', '$location', function($scope, $location){
 
-}]);;'use strict';
+}]); 'use strict';
 
 angular.module('ceresApp')
   .controller('MainController', ['$scope', '$location', function($scope, $location){
@@ -227,7 +227,7 @@ angular.module('ceresApp')
         $scope.$apply(function() { $location.path("/index"); });
     });
 }]);
-;'use strict';
+ 'use strict';
 
 angular.module('ceresApp')
   .controller('MenuController', ['$scope', '$location', 'MapCentersFactory',
@@ -247,7 +247,7 @@ angular.module('ceresApp')
 
 
       }
-}]);;'use strict';
+}]); 'use strict';
 
 angular.module('ceresApp')
   .controller('RssController', ['$scope', 'FeedService', function($scope, FeedService){
@@ -264,7 +264,7 @@ angular.module('ceresApp')
     $scope.loadFeed();
 
 }]);
-;'use strict';
+ 'use strict';
 
 angular.module('ceresApp')
   .factory('FeedService', ['$http', function($http){
@@ -277,7 +277,7 @@ angular.module('ceresApp')
     }
 
 }]);
-;'use strict';
+ 'use strict';
 
 angular.module('ceresApp')
   .factory('UserMapsFactory', ['$http', function($http){
