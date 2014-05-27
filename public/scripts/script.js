@@ -2,7 +2,8 @@
 
 angular.module('ceresApp', [
   'ngRoute',
-  'leaflet-directive'
+  'leaflet-directive',
+  'ui-rangeSlider'
 ]).config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {
         templateUrl: 'partials/login',
@@ -48,7 +49,7 @@ $(function(){
 angular.module('ceresApp')
   .controller('DefaultMapController',
   ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
-  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory){
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory) {
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     $scope.centerIndex = 0;
@@ -90,8 +91,6 @@ angular.module('ceresApp')
               ]
             }, 'temperature');
     }
-
-    $scope.opacities = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1];
 
     $scope.moveCenter = function(i){
       $scope.centerIndex = i;
@@ -227,7 +226,8 @@ angular.module('ceresApp')
         $scope.$apply();
         $scope.$apply(function() { $location.path("/index"); });
     });
-}]);;'use strict';
+}]);
+;'use strict';
 
 angular.module('ceresApp')
   .controller('MenuController', ['$scope', '$location', 'MapCentersFactory',

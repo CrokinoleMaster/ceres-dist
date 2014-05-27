@@ -20,13 +20,10 @@ div#menus(ng-controller='DefaultMapController')
                     a date
                 li
                     select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
-                li
-                    a Opacity
-                #opacity(ng-repeat='overlay in layers.overlays')
-                  li
-                      a {{overlay.name}}
-                  li
-                      select(ng-model='overlay.layerOptions.opacity' ng-options='op for op in opacities')
+    #opacity-sliders
+        div(ng-repeat='overlay in layers.overlays')
+            label {{overlay.name}}
+            div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerOptions.opacity')
 
     .off-canvas-wrap(data-offcanvas)
         .inner-wrap
