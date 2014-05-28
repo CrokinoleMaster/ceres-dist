@@ -97,32 +97,17 @@ angular.module('ceresApp')
       $scope.center = $scope.centers[i];
     }
 
-    // leaflet-image export
-    $scope.printMap = function(name){
-      leafletData.getMap().then(function(map) {
-        var key;
-        if (name === 'NDVI'){
-          key = 'temp';
-        } else if (name === 'Temperature'){
-          key = 'NDVI';
-        } else {}
-        $scope.layers.overlays[key].visible = false;
-
-        leafletImage(map, function(err, canvas) {
-          var win = window.open(canvas.toDataURL(), '_blank');
-          win.onunload = function() {
-            $scope.layers.overlays[key].visible = true;
-          }
-        });
-        if (name==='NDVI'){
-          window.setTimeout(function(){
-            leafletImage(map, function(err, canvas) {
-              var win = window.open(canvas.toDataURL(), '_blank');
-              win.onunload = function() {
-                $scope.layers.overlays[key].visible = true;
-              }
-            });
-          }, 100)
+    // html2canvas
+    $scope.export = function() {
+      html2canvas($('.main-section'), {
+        useCORS: true,
+        logging: true,
+        onrendered: function(canvas) {
+          window.open(canvas.toDataURL('image/jpeg'), '_blank');
+          // var link = document.createElement('a');
+          // link.href = canvas.toDataURL('image/jpeg');
+          // $(link).attr('download', 'something');
+          // link.click();
         }
       });
     };
@@ -221,8 +206,6 @@ angular.module('ceresApp')
       $('window').resize(function(){
         map.panTo($scope.center);
       });
-
-
 
     });
 

@@ -8,12 +8,8 @@ div#menus(ng-controller='DefaultMapController')
                 a menu
         section.top-bar-section
             ul.right
-                li.has-dropdown
-                    a(href='#') Export
-                    ul.dropdown
-                        div(ng-repeat='overlay in layers.overlays')
-                            li
-                                a(ng-click='printMap(overlay.name)') {{overlay.name}}
+                li
+                    a(ng-click='export()') Export
                 li.has-dropdown
                     a(href='#') settings
                     ul.dropdown
