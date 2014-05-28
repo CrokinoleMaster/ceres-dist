@@ -131,8 +131,18 @@ angular.module('ceresApp')
     // print function
     $scope.print = function() {
       $scope.export(function(win){
+        // chrome bug handle
+        if (win.chrome !== null && win.navigator.vendor === 'Google Inc.') {
+          win.PPClose = false;
+          win.onbeforeunload = function() {
+            if (win.PPCLose === false){
+              return 'Leaving this page will block the parent window!\nPlease select "Stay on this Page option" and use the\nCancel button instead to close the Print Preview Window.\n';
+            }
+          }
+        }
+        //
         win.print();
-        win.close();
+        win.onfocus = win.close();
       });
     }
 

@@ -9,9 +9,11 @@ div#menus(ng-controller='DefaultMapController')
         section.top-bar-section
             ul.right
                 li
-                    a(ng-click='export()') Export
+                    a(ng-click='export()')
+                        i.el-icon-download-alt
                 li
-                    a(ng-click='print()') Print
+                    a(ng-click='print()')
+                        i.el-icon-print
                 li.has-dropdown
                     a(href='#') settings
                     ul.dropdown
