@@ -9,6 +9,12 @@ div#menus(ng-controller='DefaultMapController')
         section.top-bar-section
             ul.right
                 li.has-dropdown
+                    a(href='#') Export
+                    ul.dropdown
+                        div(ng-repeat='overlay in layers.overlays')
+                            li
+                                a(ng-click='printMap(overlay.name)') {{overlay.name}}
+                li.has-dropdown
                     a(href='#') settings
                     ul.dropdown
                         li
@@ -23,7 +29,7 @@ div#menus(ng-controller='DefaultMapController')
     #opacity-sliders
         div(ng-repeat='overlay in layers.overlays')
             label {{overlay.name}}
-            div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerOptions.opacity')
+            div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
 
     .off-canvas-wrap(data-offcanvas)
         .inner-wrap

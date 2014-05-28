@@ -97,6 +97,36 @@ angular.module('ceresApp')
       $scope.center = $scope.centers[i];
     }
 
+    // leaflet-image export
+    $scope.printMap = function(name){
+      leafletData.getMap().then(function(map) {
+        var key;
+        if (name === 'NDVI'){
+          key = 'temp';
+        } else if (name === 'Temperature'){
+          key = 'NDVI';
+        } else {}
+        $scope.layers.overlays[key].visible = false;
+
+        leafletImage(map, function(err, canvas) {
+          var win = window.open(canvas.toDataURL(), '_blank');
+          win.onunload = function() {
+            $scope.layers.overlays[key].visible = true;
+          }
+        });
+        if (name==='NDVI'){
+          window.setTimeout(function(){
+            leafletImage(map, function(err, canvas) {
+              var win = window.open(canvas.toDataURL(), '_blank');
+              win.onunload = function() {
+                $scope.layers.overlays[key].visible = true;
+              }
+            });
+          }, 100)
+        }
+      });
+    };
+
     function watches(){
       $scope.$watch('currentDate', function(newvalue){
         $scope.dates.forEach(function(i){
@@ -109,12 +139,19 @@ angular.module('ceresApp')
 
     var userData;
     var baselayers = {
-          googleRoadmap: {
-            name: 'Google Satelite',
-            layerType: 'SATELLITE',
-            type: 'google'
-          }
-        };
+      googleRoadmap: {
+        name: 'Google Satelite',
+        layerType: 'SATELLITE',
+        type: 'google'
+      }
+    };
+    // var baselayers = {
+    //   baseLayer: {
+    //     name: 'base',
+    //     url:  'http://api.tiles.mapbox.com/v3/huaruiwu.ia037n1a/{z}/{x}/{y}.png',
+    //     type: 'xyz',
+    //   }
+    // }
 
     function getUser(){
       UserMapsFactory.getMap()
@@ -170,7 +207,7 @@ angular.module('ceresApp')
     leafletData.getMap().then(function(map) {
       $scope.leaflet = map;
       $scope.addLegend = function(value, name){
-        var legend = L.control({ position: 'bottomleft' });
+        var legend = L.control({ position: 'bottomright' });
         legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
         legend.addTo(map);
         legend.name = name;
@@ -180,22 +217,15 @@ angular.module('ceresApp')
 
       map.touchZoom.disable();
 
-      // map.on('overlayadd', function(eventLayer){
-      //   if (eventLayer.name === "NDVI"){
-      //     $scope.legendNDVI.addTo($scope.leaflet);
-      //   } else {
-      //     $scope.legendTemp.addTo($scope.leaflet);
-      //   }
-      // });
-      // map.on('overlayremove', function(eventLayer){
-      //   if (eventLayer.name === 'NDVI'){
-      //     $scope.legendNDVI.removeFrom($scope.leaflet);
-      //   } else if (eventLayer.name === 'Temperature'){
-      //     $scope.legendTemp.removeFrom($scope.leaflet);
-      //   }
-      // })
+      // resizes
+      $('window').resize(function(){
+        map.panTo($scope.center);
+      });
+
+
 
     });
+
 
 }]);
 

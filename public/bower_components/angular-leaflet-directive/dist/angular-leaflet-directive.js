@@ -595,9 +595,9 @@
                 }
                 //added for opacity changes
                 else {
-                  if (newOverlayLayers[newName].layerOptions && newOverlayLayers[newName].layerOptions.opacity) {
-                    if (leafletLayers.overlays[newName].options.opacity != newOverlayLayers[newName].layerOptions.opacity) {
-                      leafletLayers.overlays[newName].setOpacity(newOverlayLayers[newName].layerOptions.opacity);
+                  if (newOverlayLayers[newName].layerParams && newOverlayLayers[newName].layerParams.opacity) {
+                    if (leafletLayers.overlays[newName].options.opacity != newOverlayLayers[newName].layerParams.opacity) {
+                      leafletLayers.overlays[newName].setOpacity(newOverlayLayers[newName].layerParams.opacity);
                     }
                   }
 
@@ -608,12 +608,12 @@
                   }
                 }
                 // check for the .visible property to hide/show overLayers
-                // if (newOverlayLayers[newName].visible && !map.hasLayer(leafletLayers.overlays[newName])) {
-                //   map.addLayer(leafletLayers.overlays[newName]);
-                // }
-                // else if (newOverlayLayers[newName].visible === false && map.hasLayer(leafletLayers.overlays[newName])) {
-                //   map.removeLayer(leafletLayers.overlays[newName]);
-                // }
+                if (newOverlayLayers[newName].visible && !map.hasLayer(leafletLayers.overlays[newName])) {
+                  map.addLayer(leafletLayers.overlays[newName]);
+                }
+                else if (newOverlayLayers[newName].visible === false && map.hasLayer(leafletLayers.overlays[newName])) {
+                  map.removeLayer(leafletLayers.overlays[newName]);
+                }
               }
               // Only add the layers switch selector control if we have more than one baselayer + overlay
               isLayersControlVisible = updateLayersControl(map, mapId, isLayersControlVisible, layers.baselayers, newOverlayLayers, leafletLayers);
