@@ -190,6 +190,7 @@ angular.module('ceresApp')
       angular.extend($scope, {
         layers: layers,
         centers: userData.centers,
+        fields: userData.fields,
         center: userData.centers[0],
         dates: userData.dates,
         username: userData.name,

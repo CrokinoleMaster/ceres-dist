@@ -43,7 +43,7 @@ div#menus(ng-controller='DefaultMapController')
                     li
                         label Maps
                     li( ng-repeat='center in centers')
-                        a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') Map {{$index+1}}
+                        a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
             section.main-section
                 #index-container
                     section.main-section.medium-12.text-center
