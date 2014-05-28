@@ -98,19 +98,43 @@ angular.module('ceresApp')
     }
 
     // html2canvas
-    $scope.export = function() {
-      html2canvas($('.main-section'), {
-        useCORS: true,
-        logging: true,
-        onrendered: function(canvas) {
-          window.open(canvas.toDataURL('image/jpeg'), '_blank');
-          // var link = document.createElement('a');
-          // link.href = canvas.toDataURL('image/jpeg');
-          // $(link).attr('download', 'something');
-          // link.click();
-        }
+    $scope.export = function(callback) {
+      var base = $scope.layers.baselayers.google;
+      leafletData.getMap().then(function(map) {
+        delete $scope.layers.baselayers.google;
+        $scope.$apply();
+        $scope.layers.baselayers.google = base;
+        $scope.$apply();
       });
+      window.setTimeout(function(){
+        html2canvas($('.main-section'), {
+          useCORS: true,
+          logging: true,
+          onrendered: function(canvas) {
+            var win = window.open('', '_blank');
+            var img = document.createElement('img');
+            img.src = canvas.toDataURL('image/jpeg');
+            var $body = $(win.document.body);
+            $body.append(img);
+
+            if (callback)
+              callback(win);
+            // var link = document.createElement('a');
+            // link.href = canvas.toDataURL('image/jpeg');
+            // $(link).attr('download', 'something');
+            // link.click();
+          }
+        });
+      }, 1000);
     };
+
+    // print function
+    $scope.print = function() {
+      $scope.export(function(win){
+        win.print();
+        win.close();
+      });
+    }
 
     function watches(){
       $scope.$watch('currentDate', function(newvalue){
@@ -124,7 +148,7 @@ angular.module('ceresApp')
 
     var userData;
     var baselayers = {
-      googleRoadmap: {
+      google: {
         name: 'Google Satelite',
         layerType: 'SATELLITE',
         type: 'google'
