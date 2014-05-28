@@ -54,7 +54,7 @@ angular.module('ceresApp')
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     $scope.centerIndex = 0;
     function initLegends(){
-      $scope.legendNDVI = $scope.addLegend({
+      $scope.legendTemp = $scope.addLegend({
               position: "bottomleft",
               colors: [
                 "white",
@@ -64,22 +64,22 @@ angular.module('ceresApp')
                 "blue",
               ],
               labels: [
-                "<strong> Temperature </strong>",
+                "<strong> Water Stress </strong>",
                 "High stress",
                 "Moderate stress",
                 "Low stress",
                 "Well-watered"
               ]
             }, 'NDVI');
-      $scope.legendTemp = $scope.addLegend({
+      $scope.legendNDVI = $scope.addLegend({
               position: "bottomleft",
               colors: [
                 "white",
-                "red",
-                "orange",
-                "yellow",
-                "lightgreen",
-                "green",
+                "#97f073",
+                "#44db08",
+                "#2f9706",
+                "#257904",
+                "#0e2e01"
               ],
               labels: [
                 "<strong> NDVI </strong>",
