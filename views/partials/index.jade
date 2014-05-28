@@ -36,7 +36,7 @@ div#menus(ng-controller='DefaultMapController')
             a.left-off-canvas-toggle.menu-icon( ng-cloak ng-show='user.currentProfile')
                 span
                     #menu-icon
-                        i.el-icon-th-list    fields
+                        i.el-icon-th-list    {{username}}
 
             section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
                 ul.off-canvas-list

@@ -192,6 +192,7 @@ angular.module('ceresApp')
         centers: userData.centers,
         center: userData.centers[0],
         dates: userData.dates,
+        username: userData.name,
         currentDate: userData.dates.slice(-1)[0].date
       });
 
