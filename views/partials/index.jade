@@ -62,6 +62,8 @@ div#menus
                             i.el-icon-rss  Weather
                         p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                             {{feed}}
+
+
     div.main-app#split-two.split-view(ng-show='isSplit' ng-controller='DefaultMapController')
         nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
             ul.title-area
