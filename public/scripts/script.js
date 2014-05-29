@@ -166,9 +166,7 @@ angular.module('ceresApp')
         })
       });
       $scope.$watch('isSplit', function(newvalue){
-        leafletData.getMap().then(function(map) {
-         map.invalidateSize(false);
-        });
+         $scope.leaflet.invalidateSize(false);
       })
     }
 
@@ -241,27 +239,29 @@ angular.module('ceresApp')
       },
     });
 
-    leafletData.getMap().then(function(map) {
-      $scope.leaflet = map;
-      $scope.addLegend = function(value, name){
-        var legend = L.control({ position: 'bottomright' });
-        legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
-        legend.addTo(map);
-        legend.name = name;
-        return legend;
-      }
-      if ($scope.legendTemp === undefined){
-        initLegends();
-      }
+    $scope.mapInit = function(map){
+      leafletData.getMap(map).then(function(map) {
+        $scope.leaflet = map;
+        $scope.addLegend = function(value, name){
+          var legend = L.control({ position: 'bottomright' });
+          legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
+          legend.addTo(map);
+          legend.name = name;
+          return legend;
+        }
+        if ($scope.legendTemp === undefined){
+          initLegends();
+        }
 
-      map.touchZoom.disable();
+        map.touchZoom.disable();
 
-      // resizes
-      $('window').resize(function(){
-        map.panTo($scope.center);
+        // resizes
+        $('window').resize(function(){
+          map.panTo($scope.center);
+        });
+
       });
-
-    });
+    }
 
 
 }]);

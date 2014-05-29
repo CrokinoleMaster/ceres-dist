@@ -10,7 +10,8 @@ div#menus
             section.top-bar-section
                 ul.right
                     li
-                        a(ng-hide='isSplit' ng-click='split()') Split
+                        a(ng-hide='isSplit' ng-click='split()')
+                            i.el-icon-file-new
                     li
                         a(ng-click='export($event, 1)')
                             i.el-icon-download-alt
@@ -51,7 +52,7 @@ div#menus
                     #index-container
                         section.main-section.medium-12.text-center
                             div#map-container
-                                leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')
+                                leaflet#map1(ng-init='mapInit("map1")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
                     #rss(ng-controller='RssController')
                         #menu-icon(ng-click="loadFeed()")
                             i.el-icon-rss  Weather
@@ -65,7 +66,8 @@ div#menus
             section.top-bar-section
                 ul.right
                     li
-                        a(ng-click='split()') Split
+                        a(ng-click='split()')
+                            i.el-icon-file-new
                     li
                         a(ng-click='export($event, 2)')
                             i.el-icon-download-alt
@@ -106,7 +108,7 @@ div#menus
                     #index-container
                         section.main-section.medium-12.text-center
                             div#map-container
-                                leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')
+                                leaflet#map2(ng-init='mapInit("map2")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
                     #rss(ng-controller='RssController')
                         #menu-icon(ng-click="loadFeed()")
                             i.el-icon-rss  Weather
