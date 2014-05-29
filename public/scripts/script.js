@@ -254,6 +254,13 @@ angular.module('ceresApp')
         }
 
         map.touchZoom.disable();
+        map.on('mousemove', function(e) {
+          $scope.cursor = {};
+          $scope.cursor.lat = e.latlng.lat;
+          $scope.cursor.lng = e.latlng.lng;
+          console.log($scope.cursor.lat);
+          console.log($scope.cursor.lng);
+        });
 
         // resizes
         $('window').resize(function(){

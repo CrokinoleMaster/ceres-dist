@@ -34,6 +34,10 @@ div#menus
             div(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
+        .cursor-location
+            span.lat lat:{{cursor.lat}}
+            span &nbsp;&nbsp;
+            span.lng lng:{{cursor.lng}}
 
         .off-canvas-wrap(data-offcanvas)
             .inner-wrap(ng-class="{'split-inner': isSplit}")
@@ -90,6 +94,10 @@ div#menus
             div(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
+        .cursor-location
+            span.lat lat:{{cursor.lat}}
+            span &nbsp;&nbsp;
+            span.lng lng:{{cursor.lng}}
 
         .off-canvas-wrap(data-offcanvas)
             .inner-wrap(ng-class="{'split-inner': isSplit}")
