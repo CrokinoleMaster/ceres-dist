@@ -1,56 +1,114 @@
-div#menus(ng-controller='DefaultMapController')
-    nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
-        ul.title-area
-            li.name
-                h1
-                    a(href='#') Ceres imaging
-            li.toggle-topbar.menu-icon
-                a menu
-        section.top-bar-section
-            ul.right
-                li
-                    a(ng-click='export()')
-                        i.el-icon-download-alt
-                li
-                    a(ng-click='print()')
-                        i.el-icon-print
-                li.has-dropdown
-                    a(href='#') settings
-                    ul.dropdown
-                        li
-                            a(href='#') first link
-                li.active
-                    a.exit-off-canvas(href='#' rel='logout') logout
-            ul.left
-                li
-                    a date
-                li
-                    select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
-    #opacity-sliders
-        div(ng-repeat='overlay in layers.overlays')
-            label {{overlay.name}}
-            div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
-
-    .off-canvas-wrap(data-offcanvas)
-        .inner-wrap
-            a.left-off-canvas-toggle.menu-icon( ng-cloak ng-show='user.currentProfile')
-                span
-                    #menu-icon
-                        i.el-icon-th-list    {{username}}
-
-            section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
-                ul.off-canvas-list
+div#menus
+    div.main-app#split-one(ng-class="{'split': isSplit}" ng-controller='DefaultMapController' )
+        nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
+            ul.title-area
+                li.name
+                    h1
+                        a(href='#') Ceres imaging
+                li.toggle-topbar.menu-icon
+                    a menu
+            section.top-bar-section
+                ul.right
                     li
-                        label Maps
-                    li( ng-repeat='center in centers')
-                        a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
-            section.main-section
-                #index-container
-                    section.main-section.medium-12.text-center
-                        div#map-container
-                            leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')
-                #rss(ng-controller='RssController')
-                    #menu-icon(ng-click="loadFeed()")
-                        i.el-icon-rss  Weather
-                    p(ng-show="feedDisplay").
-                        {{feed}}
+                        a(ng-hide='isSplit' ng-click='split()') Split
+                    li
+                        a(ng-click='export($event, 1)')
+                            i.el-icon-download-alt
+                    li
+                        a(ng-click='print($event, 1)')
+                            i.el-icon-print
+                    li.has-dropdown
+                        a(ng-hide='isSplit' href='#') settings
+                        ul.dropdown
+                            li
+                                a(href='#') first link
+                    li.active
+                        a.exit-off-canvas(ng-hide='isSplit' href='#' rel='logout') logout
+                ul.left
+                    li
+                        a date
+                    li
+                        select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
+        #opacity-sliders
+            div(ng-repeat='overlay in layers.overlays')
+                label {{overlay.name}}
+                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
+
+        .off-canvas-wrap(data-offcanvas)
+            .inner-wrap(ng-class="{'split-inner': isSplit}")
+                a.left-off-canvas-toggle.menu-icon( ng-cloak ng-show='user.currentProfile')
+                    span
+                        #menu-icon
+                            i.el-icon-th-list    {{username}}
+
+                section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
+                    ul.off-canvas-list
+                        li
+                            label Maps
+                        li( ng-repeat='center in centers')
+                            a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
+                section.main-section
+                    #index-container
+                        section.main-section.medium-12.text-center
+                            div#map-container
+                                leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')
+                    #rss(ng-controller='RssController')
+                        #menu-icon(ng-click="loadFeed()")
+                            i.el-icon-rss  Weather
+                        p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
+                            {{feed}}
+    div.main-app#split-two.split-view(ng-show='isSplit' ng-controller='DefaultMapController')
+        nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
+            ul.title-area
+                li.toggle-topbar.menu-icon
+                    a menu
+            section.top-bar-section
+                ul.right
+                    li
+                        a(ng-click='split()') Split
+                    li
+                        a(ng-click='export($event, 2)')
+                            i.el-icon-download-alt
+                    li
+                        a(ng-click='print($event, 2)')
+                            i.el-icon-print
+                    li.has-dropdown
+                        a(href='#') settings
+                        ul.dropdown
+                            li
+                                a(href='#') first link
+                    li.active
+                        a.exit-off-canvas(href='#' rel='logout') logout
+                ul.left
+                    li
+                        a date
+                    li
+                        select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
+        #opacity-sliders
+            div(ng-repeat='overlay in layers.overlays')
+                label {{overlay.name}}
+                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
+
+        .off-canvas-wrap(data-offcanvas)
+            .inner-wrap(ng-class="{'split-inner': isSplit}")
+                a.left-off-canvas-toggle.menu-icon( ng-cloak ng-show='user.currentProfile')
+                    span
+                        #menu-icon
+                            i.el-icon-th-list    {{username}}
+
+                section.left-off-canvas-menu(ng-cloak ng-show='user.currentProfile')
+                    ul.off-canvas-list
+                        li
+                            label Maps
+                        li( ng-repeat='center in centers')
+                            a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
+                section.main-section
+                    #index-container
+                        section.main-section.medium-12.text-center
+                            div#map-container
+                                leaflet(center='center' layers='layers' defaults='defaults' url-hash-center='yes')
+                    #rss(ng-controller='RssController')
+                        #menu-icon(ng-click="loadFeed()")
+                            i.el-icon-rss  Weather
+                        p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
+                            {{feed}}

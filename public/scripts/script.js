@@ -98,7 +98,7 @@ angular.module('ceresApp')
     }
 
     // html2canvas
-    $scope.export = function(callback) {
+    $scope.export = function(e, split, callback) {
       var base = $scope.layers.baselayers.google;
       leafletData.getMap().then(function(map) {
         delete $scope.layers.baselayers.google;
@@ -107,13 +107,24 @@ angular.module('ceresApp')
         $scope.$apply();
       });
       window.setTimeout(function(){
-        html2canvas($('.main-section'), {
+        var target = $(e.target).parents('.main-app').find('.main-section');
+        var splitWidth = $(window).width() / 2;
+        console.log(target);
+        html2canvas( target , {
           useCORS: true,
           logging: true,
           onrendered: function(canvas) {
             var win = window.open('', '_blank');
             var img = document.createElement('img');
             img.src = canvas.toDataURL('image/jpeg');
+            if ($scope.isSplit){
+              canvas.width = splitWidth;
+              if (split === 2){
+                splitWidth = -splitWidth;
+              } else { splitWidth = 0; }
+              canvas.getContext('2d').drawImage(img, splitWidth, 0);
+              img.src = canvas.toDataURL('image/jpeg');
+            }
             var $body = $(win.document.body);
             $body.append(img);
 
@@ -129,8 +140,8 @@ angular.module('ceresApp')
     };
 
     // print function
-    $scope.print = function() {
-      $scope.export(function(win){
+    $scope.print = function(e, split) {
+      $scope.export(e, split, function(win){
         // chrome bug handle
         if (win.chrome !== null && win.navigator.vendor === 'Google Inc.') {
           win.PPClose = false;
@@ -154,6 +165,11 @@ angular.module('ceresApp')
           }
         })
       });
+      $scope.$watch('isSplit', function(newvalue){
+        leafletData.getMap().then(function(map) {
+         map.invalidateSize(false);
+        });
+      })
     }
 
     var userData;
@@ -234,7 +250,9 @@ angular.module('ceresApp')
         legend.name = name;
         return legend;
       }
-      initLegends();
+      if ($scope.legendTemp === undefined){
+        initLegends();
+      }
 
       map.touchZoom.disable();
 
@@ -251,10 +269,17 @@ angular.module('ceresApp')
  'use strict';
 
 angular.module('ceresApp')
-  .controller('IndexController', ['$scope', '$location', function($scope, $location){
+  .controller('IndexController', ['$scope', '$location', 'leafletData',
+      function($scope, $location, leafletData){
 
+  $scope.isSplit = false;
+  // split maps
+  $scope.split = function() {
+    $scope.isSplit = !$scope.isSplit;
+  }
 
-}]); 'use strict';
+}]);
+ 'use strict';
 
 angular.module('ceresApp')
   .controller('LoginController', ['$scope', '$location', function($scope, $location){
