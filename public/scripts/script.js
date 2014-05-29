@@ -59,8 +59,8 @@ angular.module('ceresApp')
               colors: [
                 "white",
                 "red",
-                "green",
                 "yellow",
+                "green",
                 "blue",
               ],
               labels: [
