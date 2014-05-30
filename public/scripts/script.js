@@ -53,6 +53,7 @@ angular.module('ceresApp')
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     $scope.centerIndex = 0;
+    $scope.isSync = false;
     function initLegends(){
       $scope.legendTemp = $scope.addLegend({
               position: "bottomleft",
@@ -157,6 +158,27 @@ angular.module('ceresApp')
       });
     }
 
+    // sync maps
+    $scope.sync = function(mapNum) {
+      leafletData.getMap('map1').then(function(map1) {
+        leafletData.getMap('map2').then(function(map2){
+          if (!$scope.isSync){
+            $scope.isSync = true;
+            map2.on('drag zoomend', function(){
+              map1.setView(map2.getCenter(), map2.getZoom(), {animate: false, duration: 1});
+            })
+            map1.on('drag zoomend', function(){
+              map2.setView(map1.getCenter(), map1.getZoom(), {animate: false, duration: 1});
+            })
+          } else {
+            map2.off('drag zoomend');
+            map1.off('drag zoomend');
+            $scope.isSync = false;
+          }
+        });
+      });
+    }
+
     function watches(){
       $scope.$watch('currentDate', function(newvalue){
         $scope.dates.forEach(function(i){
@@ -258,8 +280,6 @@ angular.module('ceresApp')
           $scope.cursor = {};
           $scope.cursor.lat = e.latlng.lat;
           $scope.cursor.lng = e.latlng.lng;
-          console.log($scope.cursor.lat);
-          console.log($scope.cursor.lng);
         });
 
         // resizes

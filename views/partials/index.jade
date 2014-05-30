@@ -27,7 +27,7 @@ div#menus
                         a.exit-off-canvas(ng-hide='isSplit' href='#' rel='logout') logout
                 ul.left
                     li
-                        a date
+                        a Date
                     li
                         select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
         #opacity-sliders
@@ -71,6 +71,9 @@ div#menus
                     a menu
             section.top-bar-section
                 ul.right
+                    li(ng-class="{'active': isSync}" )
+                        a(ng-click='sync()')
+                            i.el-icon-link
                     li
                         a(ng-click='split()')
                             i.el-icon-delicious
@@ -89,7 +92,7 @@ div#menus
                         a.exit-off-canvas(href='#' rel='logout') logout
                 ul.left
                     li
-                        a date
+                        a Date
                     li
                         select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
         #opacity-sliders
