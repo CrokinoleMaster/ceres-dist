@@ -73,7 +73,6 @@ angular.module('ceresApp')
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     $scope.centerIndex = 0;
-    $scope.isSync = false;
     function initLegends(){
       $scope.legendTemp = $scope.addLegend({
               position: "bottomleft",
@@ -177,22 +176,31 @@ angular.module('ceresApp')
     }
 
     // sync maps
-    $scope.sync = function(mapNum) {
+    $scope.sync = function() {
+      var move1;
+      var move2;
+      var zoom1;
+      var zoom2;
       leafletData.getMap('map1').then(function(map1) {
         leafletData.getMap('map2').then(function(map2){
-          if (!$scope.isSync){
-            $scope.isSync = true;
-            map2.on('drag zoomend', function(){
-              map1.setView(map2.getCenter(), map2.getZoom(), {animate: false, duration: 1});
-            })
-            map1.on('drag zoomend', function(){
-              map2.setView(map1.getCenter(), map1.getZoom(), {animate: false, duration: 1});
-            })
-          } else {
-            map2.off('drag zoomend');
-            map1.off('drag zoomend');
-            $scope.isSync = false;
-          }
+            move1 = function (){
+              // map1.setView(map2.getCenter(), map2.getZoom(), {animate: false, duration: 1});
+              map1.panTo(map2.getCenter(), {animate: false, duration: 1});
+            }
+            move2 = function (){
+              // map2.setView(map1.getCenter(), map1.getZoom(), {animate: false, duration: 1});
+              map2.panTo(map1.getCenter(), {animate: false, duration: 1});
+            }
+            zoom1 = function(){
+              map1.setZoom(map2.getZoom(), {animate: false, duration: 0});
+            }
+            zoom2 = function(){
+              map2.setZoom(map1.getZoom(), {animate: false, duration: 0});
+            }
+            map2.on('drag', move1);
+            map1.on('drag', move2);
+            map2.on('zoomend', zoom1);
+            map1.on('zoomend', zoom2);
         });
       });
     }
@@ -304,6 +312,8 @@ angular.module('ceresApp')
         $('window').resize(function(){
           map.panTo($scope.center);
         });
+
+        $scope.sync();
 
       });
     }

@@ -11,7 +11,7 @@ div#menus
                 ul.right
                     li
                         a(ng-hide='isSplit' ng-click='split()')
-                            i.el-icon-delicious
+                            i.el-icon-link
                     li
                         a(ng-click='export($event, 1)')
                             i.el-icon-picture
@@ -71,12 +71,9 @@ div#menus
                     a menu
             section.top-bar-section
                 ul.right
-                    li(ng-class="{'active': isSync}" )
-                        a(ng-click='sync()')
-                            i.el-icon-link
                     li
                         a(ng-click='split()')
-                            i.el-icon-delicious
+                            i.el-icon-link
                     li
                         a(ng-click='export($event, 2)')
                             i.el-icon-picture
