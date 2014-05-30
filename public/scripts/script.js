@@ -121,12 +121,10 @@ angular.module('ceresApp')
     // html2canvas
     $scope.export = function(e, split, callback) {
       var base = $scope.layers.baselayers.google;
-      leafletData.getMap().then(function(map) {
         delete $scope.layers.baselayers.google;
         $scope.$apply();
         $scope.layers.baselayers.google = base;
         $scope.$apply();
-      });
       window.setTimeout(function(){
         var target = $(e.target).parents('.main-app').find('.main-section');
         var splitWidth = $(window).width() / 2;
