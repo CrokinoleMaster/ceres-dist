@@ -57,11 +57,11 @@ div#menus
                         section.main-section.medium-12.text-center
                             div#map-container
                                 leaflet#map1(ng-init='mapInit("map1")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
-                    #rss(ng-controller='RssController')
-                        #menu-icon(ng-click="loadFeed()")
-                            i.el-icon-rss  Weather
-                        p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
-                            {{feed}}
+                    // #rss(ng-controller='RssController')
+                    //     #menu-icon(ng-click="loadFeed()")
+                    //         i.el-icon-rss  Weather
+                    //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
+                    //         {{feed}}
 
 
     div.main-app#split-two.split-view(ng-show='isSplit' ng-controller='DefaultMapController')
@@ -122,8 +122,8 @@ div#menus
                         section.main-section.medium-12.text-center
                             div#map-container
                                 leaflet#map2(ng-init='mapInit("map2")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
-                    #rss(ng-controller='RssController')
-                        #menu-icon(ng-click="loadFeed()")
-                            i.el-icon-rss  Weather
-                        p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
-                            {{feed}}
+                    // #rss(ng-controller='RssController')
+                    //     #menu-icon(ng-click="loadFeed()")
+                    //         i.el-icon-rss  Weather
+                    //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
+                    //         {{feed}}
