@@ -35,9 +35,9 @@ div#menus
                 label {{overlay.name}}
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
         .cursor-location
-            span.lat lat:{{cursor.lat}}
+            span.lat lat: {{cursor.lat | latLng}} W
             span &nbsp;&nbsp;
-            span.lng lng:{{cursor.lng}}
+            span.lng lng: {{cursor.lng | latLng}} N
 
         .off-canvas-wrap(data-offcanvas)
             .inner-wrap(ng-class="{'split-inner': isSplit}")
@@ -100,9 +100,9 @@ div#menus
                 label {{overlay.name}}
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
         .cursor-location
-            span.lat lat:{{cursor.lat}}
+            span.lat lat: {{cursor.lat | latLng}} W
             span &nbsp;&nbsp;
-            span.lng lng:{{cursor.lng}}
+            span.lng lng: {{cursor.lng | latLng}} N
 
         .off-canvas-wrap(data-offcanvas)
             .inner-wrap(ng-class="{'split-inner': isSplit}")

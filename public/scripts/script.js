@@ -47,6 +47,26 @@ $(function(){
  'use strict';
 
 angular.module('ceresApp')
+.filter('latLng', function(){
+  return function(deg) {
+    var d = Math.floor (deg);
+    var minfloat = (deg-d)*60;
+    var m = Math.floor(minfloat);
+    var secfloat = (minfloat-m)*60;
+    var s = secfloat.toFixed(2);
+    if (s==60) {
+      m++;
+      s=0;
+    }
+    if (m==60) {
+      d++;
+      m=0;
+    }
+    return ("" + d + "\u00B0 " + m + "' " + s + "\"");
+  }
+})
+
+angular.module('ceresApp')
   .controller('DefaultMapController',
   ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
   function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory) {
