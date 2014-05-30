@@ -69,7 +69,7 @@ angular.module('ceresApp')
                 "High stress",
                 "Moderate stress",
                 "Low stress",
-                "Well-watered"
+                "Unstressed"
               ]
             }, 'NDVI');
       $scope.legendNDVI = $scope.addLegend({
@@ -83,7 +83,7 @@ angular.module('ceresApp')
                 "#0e2e01"
               ],
               labels: [
-                "<strong> NDVI </strong>",
+                "<strong> NDVI (Biomass) </strong>",
                 "Low vigor",
                 ".        ",
                 ".         ",
