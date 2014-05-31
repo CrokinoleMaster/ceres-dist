@@ -95,10 +95,9 @@ angular.module('ceresApp')
               position: "bottomleft",
               colors: [
                 "white",
-                "#97f073",
-                "#44db08",
+                "red",
+                "yellow",
                 "#2f9706",
-                "#257904",
                 "#0e2e01"
               ],
               labels: [
@@ -106,7 +105,6 @@ angular.module('ceresApp')
                 "Low vigor",
                 ".        ",
                 ".         ",
-                ".        ",
                 "High vigor"
               ]
             }, 'temperature');
@@ -127,7 +125,6 @@ angular.module('ceresApp')
       window.setTimeout(function(){
         var target = $(e.target).parents('.main-app').find('.main-section');
         var splitWidth = $(window).width() / 2;
-        console.log(target);
         html2canvas( target , {
           useCORS: true,
           logging: true,
@@ -327,11 +324,41 @@ angular.module('ceresApp')
   .controller('IndexController', ['$scope', '$location', 'leafletData',
       function($scope, $location, leafletData){
 
+  $scope.showLayerControl = true;
+  $scope.showLegend = true;
   $scope.isSplit = false;
+
   // split maps
   $scope.split = function() {
+    var legend1 = $('#split-one .legend');
     $scope.isSplit = !$scope.isSplit;
+    if (!$scope.isSplit && $scope.showLegend){
+      legend1.show();
+    } else {
+      legend1.hide();
+    }
   }
+
+  // toggle layer controls
+  $scope.toggleLayerControl = function(){
+    $scope.showLayerControl = !$scope.showLayerControl;
+  }
+
+  // toggle legends
+  $scope.toggleLegend = function(){
+    var legend1 = $('#split-one .legend');
+    var legends = $('.legend');
+    $scope.showLegend = !$scope.showLegend;
+    if ($scope.showLegend){
+      legends.show();
+    } else {
+      legends.hide();
+    }
+    if ($scope.isSplit){
+      legend1.hide();
+    }
+  }
+
 
 }]);
  'use strict';
