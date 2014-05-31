@@ -30,8 +30,8 @@ div#menus
                         a Date
                     li
                         select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
-        #opacity-sliders
-            div(ng-repeat='overlay in layers.overlays')
+        #opacity-sliders.row
+            .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
         .cursor-location
@@ -92,8 +92,8 @@ div#menus
                         a Date
                     li
                         select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
-        #opacity-sliders
-            div(ng-repeat='overlay in layers.overlays')
+        #opacity-sliders.row
+            .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
         .cursor-location
