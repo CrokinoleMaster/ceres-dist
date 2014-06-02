@@ -64,6 +64,13 @@ angular.module('ceresApp')
     }
     return ("" + d + "\u00B0 " + m + "' " + s + "\"");
   }
+});
+
+angular.module('ceresApp')
+.filter('percentage', function(){
+  return function(ratio){
+    return ratio*100 + '%';
+  }
 })
 
 angular.module('ceresApp')

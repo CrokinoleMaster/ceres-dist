@@ -35,7 +35,7 @@ div#menus
         #opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
-                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
+                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W
             span &nbsp;&nbsp;
@@ -99,7 +99,7 @@ div#menus
         #opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
-                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity')
+                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W
             span &nbsp;&nbsp;
