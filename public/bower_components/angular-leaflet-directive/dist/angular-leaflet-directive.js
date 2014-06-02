@@ -1884,7 +1884,7 @@
             for (i in leafletLayers.overlays) {
               _layersControl.removeLayer(leafletLayers.overlays[i]);
             }
-            _layersControl.removeFrom(map);
+            // _layersControl.removeFrom(map);
           }
           if (mustBeLoaded) {
             _layersControl = _createLayersControl(mapId);

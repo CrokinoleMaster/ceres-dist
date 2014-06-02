@@ -208,11 +208,28 @@ angular.module('ceresApp')
           if (i.date === newvalue){
             $scope.layers.overlays = i.overlays;
           }
-        })
+        });
       });
       $scope.$watch('isSplit', function(newvalue){
          $scope.leaflet.invalidateSize(false);
-      })
+      });
+      // opacity layers watch
+      $scope.$watch('layers.overlays.NDVI.layerParams.opacity', function(newvalue){
+        if ($scope.layers.overlays.NDVI){
+          $scope.dates.forEach(function(i){
+            if (i.overlays.NDVI)
+              i.overlays.NDVI.layerParams.opacity = newvalue
+          });
+        }
+      });
+      $scope.$watch('layers.overlays.temp.layerParams.opacity', function(newvalue){
+        if ($scope.layers.overlays.temp){
+          $scope.dates.forEach(function(i){
+            if (i.overlays.temp)
+              i.overlays.temp.layerParams.opacity = newvalue
+          });
+        }
+      });
     }
 
     var userData;
