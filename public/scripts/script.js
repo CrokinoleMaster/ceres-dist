@@ -102,8 +102,9 @@ angular.module('ceresApp')
               position: "bottomleft",
               colors: [
                 "white",
-                "red",
-                "yellow",
+                "#81F781",
+                "#01DF3A",
+                "#04B404",
                 "#2f9706",
                 "#0e2e01"
               ],
@@ -111,6 +112,7 @@ angular.module('ceresApp')
                 "<strong> NDVI (Biomass) </strong>",
                 "Low vigor",
                 ".        ",
+                ".         ",
                 ".         ",
                 "High vigor"
               ]
