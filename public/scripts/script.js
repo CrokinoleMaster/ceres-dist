@@ -3,8 +3,7 @@
 angular.module('ceresApp', [
   'ngRoute',
   'leaflet-directive',
-  'ui-rangeSlider',
-  'angular-intro'
+  'ui-rangeSlider'
 ]).config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {
         templateUrl: 'partials/login',
@@ -76,8 +75,8 @@ angular.module('ceresApp')
 
 angular.module('ceresApp')
   .controller('DefaultMapController',
-  ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory', '$timeout',
-  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, $timeout) {
+  ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory) {
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     $scope.centerIndex = 0;
@@ -343,14 +342,13 @@ angular.module('ceresApp')
     }
 
 
-
 }]);
 
  'use strict';
 
 angular.module('ceresApp')
-  .controller('IndexController', ['$scope', '$location', 'leafletData', '$timeout',
-      function($scope, $location, leafletData, $timeout){
+  .controller('IndexController', ['$scope', '$location', 'leafletData',
+      function($scope, $location, leafletData){
 
   $scope.showLayerControl = true;
   $scope.showLegend = true;
@@ -387,66 +385,6 @@ angular.module('ceresApp')
     }
   }
 
-  // introjs tour
-  $scope.tour = {
-    steps: [
-        {
-          element: '.title-area',
-          position: 'right',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#date-button',
-          position: 'right',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#menu-icon',
-          position: 'right',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '.top-bar',
-          position: 'bottom-middle-aligned',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#opacity-sliders',
-          position: 'left',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '.legend',
-          position: 'left',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#split-button',
-          position: 'bottom',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#export-button',
-          position: 'bottom',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#print-button',
-          position: 'bottom',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#settings-button',
-          position: 'left',
-          intro: 'Lorem ipsum dolor sit amet'
-        },
-        {
-          element: '#logout-button',
-          position: 'left',
-          intro: 'Lorem ipsum dolor sit amet'
-        }
-      ]
-  }
 
 }]);
  'use strict';
