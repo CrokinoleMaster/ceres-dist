@@ -1,5 +1,5 @@
 div#menus
-    div.main-app#split-one(ng-class="{'split': isSplit}" ng-controller='DefaultMapController' )
+    div.main-app#split-one(ng-class="{'split': isSplit}" ng-controller='DefaultMapController' ng-intro-options='tour' ng-intro-method='startTour' ng-intro-autostart='true')
         nav.top-bar(data-topbar ng-cloak ng-show='user.currentProfile')
             ul.title-area
                 li.name
@@ -10,28 +10,28 @@ div#menus
             section.top-bar-section
                 ul.right
                     li
-                        a(ng-hide='isSplit' ng-click='split()')
+                        a#split-button(ng-hide='isSplit' ng-click='split()')
                             i.el-icon-link
                     li
-                        a(ng-click='export($event, 1)')
+                        a#export-button(ng-click='export($event, 1)')
                             i.el-icon-picture
                     li
-                        a(ng-click='print($event, 1)')
+                        a#print-button(ng-click='print($event, 1)')
                             i.el-icon-print
                     li.has-dropdown(ng-hide='isSplit')
-                        a(href='#') settings
+                        a#settings-button(href='#') settings
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
                                 a layer control
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
                     li.active
-                        a.exit-off-canvas(ng-hide='isSplit' href='#' rel='logout') logout
+                        a#logout-button.exit-off-canvas(ng-hide='isSplit' href='#' rel='logout') logout
                 ul.left
                     li
                         a Date
                     li
-                        select(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
+                        select#date-button(ng-model='currentDate' ng-options='item.date as item.date for item in dates')
         #opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
