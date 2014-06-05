@@ -67,11 +67,23 @@ angular.module('ceresApp')
 });
 
 angular.module('ceresApp')
+.filter('date', function(){
+  return function(items, fieldIndex) {
+    if (items){
+      items = items.filter(function(date){
+        return !$.inArray(fieldIndex, date.fields);
+      });
+    }
+    return items;
+  }
+});
+
+angular.module('ceresApp')
 .filter('percentage', function(){
   return function(ratio){
     return ratio*100 + '%';
   }
-})
+});
 
 angular.module('ceresApp')
   .controller('DefaultMapController',
@@ -122,6 +134,11 @@ angular.module('ceresApp')
     $scope.moveCenter = function(i){
       $scope.centerIndex = i;
       $scope.center = $scope.centers[i];
+      var items = $scope.dates.filter(function(date){
+        return !$.inArray($scope.centerIndex, date.fields);
+      });
+      $scope.currentDate = items.slice(-1)[0].date;
+      console.log(items);
     }
 
     // html2canvas
@@ -279,7 +296,6 @@ angular.module('ceresApp')
         center: userData.centers[0],
         dates: userData.dates,
         username: userData.name,
-        currentDate: userData.dates.slice(-1)[0].date
       });
 
       /* add hashing for forward and back between maps */
@@ -293,6 +309,7 @@ angular.module('ceresApp')
           $location.hash('map_'+($scope.centerIndex+1) );
         }
       });
+      $scope.moveCenter(0);
     }
 
     /* calling init functions */
