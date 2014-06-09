@@ -91,7 +91,6 @@ angular.module('ceresApp')
   function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory) {
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
-    $scope.centerIndex = 0;
     function initLegends(){
       $scope.legendTemp = $scope.addLegend({
               position: "bottomleft",
@@ -132,13 +131,7 @@ angular.module('ceresApp')
     }
 
     $scope.moveCenter = function(i){
-      $scope.centerIndex = i;
-      $scope.center = $scope.centers[i];
-      var items = $scope.dates.filter(function(date){
-        return !$.inArray($scope.centerIndex, date.fields);
-      });
-      $scope.currentDate = items.slice(-1)[0].date;
-      console.log(items);
+      $scope.$parent.centerIndex = i;
     }
 
     // html2canvas
@@ -237,8 +230,15 @@ angular.module('ceresApp')
         });
       });
       $scope.$watch('isSplit', function(newvalue){
-         $scope.leaflet.invalidateSize(false);
+        $scope.leaflet.invalidateSize(false);
       });
+      $scope.$parent.$watch('centerIndex', function(newvalue){
+        $scope.center = $scope.centers[newvalue];
+        var items = $scope.dates.filter(function(date){
+          return !$.inArray($scope.$parent.centerIndex, date.fields);
+        });
+        $scope.currentDate = items.slice(-1)[0].date;
+      })
       // opacity layers watch
       $scope.$watch('layers.overlays.NDVI.layerParams.opacity', function(newvalue){
         if ($scope.layers.overlays.NDVI){
@@ -300,13 +300,13 @@ angular.module('ceresApp')
 
       /* add hashing for forward and back between maps */
       $scope.$on("centerUrlHash", function(event, centerHash) {
-        var center = $scope.centers[$scope.centerIndex];
+        var center = $scope.centers[$scope.$parent.centerIndex];
         var lat = center.lat.toFixed(4).toString();
         var lng = center.lng.toFixed(4).toString();
         var zoom = center.zoom.toString();
         if (centerHash === lat+':'+lng+':'+zoom ){
           $location.search({ c: centerHash });
-          $location.hash('map_'+($scope.centerIndex+1) );
+          $location.hash('map_'+($scope.$parent.centerIndex+1) );
         }
       });
       $scope.moveCenter(0);
@@ -370,6 +370,7 @@ angular.module('ceresApp')
   $scope.showLayerControl = true;
   $scope.showLegend = true;
   $scope.isSplit = false;
+  $scope.centerIndex = 0;
 
   // split maps
   $scope.split = function() {
