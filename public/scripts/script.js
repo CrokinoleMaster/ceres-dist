@@ -71,7 +71,9 @@ angular.module('ceresApp')
   return function(items, fieldIndex) {
     if (items){
       items = items.filter(function(date){
-        return !$.inArray(fieldIndex, date.fields);
+        if ($.inArray(fieldIndex, date.fields) !== -1){
+          return true;
+        }
       });
     }
     return items;
@@ -235,9 +237,12 @@ angular.module('ceresApp')
       $scope.$parent.$watch('centerIndex', function(newvalue){
         $scope.center = $scope.centers[newvalue];
         var items = $scope.dates.filter(function(date){
-          return !$.inArray($scope.$parent.centerIndex, date.fields);
+          if ($.inArray($scope.$parent.centerIndex, date.fields) !== -1){
+            return true;
+          }
         });
         $scope.currentDate = items.slice(-1)[0].date;
+        console.log($scope.currentDate);
       })
       // opacity layers watch
       $scope.$watch('layers.overlays.NDVI.layerParams.opacity', function(newvalue){
