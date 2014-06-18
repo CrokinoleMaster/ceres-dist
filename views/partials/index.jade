@@ -12,11 +12,11 @@ div#menus
                     li#split-button.has-tip(data-tooltip title='split view')
                         a(ng-hide='isSplit' ng-click='split()')
                             i.el-icon-link
-                    li#export-button.has-tip(data-tooltip title='export')
-                        a(ng-click='export($event, 1)')
+                    li#export-button.has-tip(ng-hide='isSplit' data-tooltip title='export')
+                        a(ng-click='export()')
                             i.el-icon-picture
-                    li#print-button.has-tip(data-tooltip title='print')
-                        a(ng-click='print($event, 1)')
+                    li#print-button.has-tip(ng-hide='isSplit' data-tooltip title='print')
+                        a(ng-click='print()')
                             i.el-icon-print
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
@@ -56,7 +56,7 @@ div#menus
                             a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
                 section.main-section
                     #index-container
-                        section.main-section.medium-12.text-center
+                        section.medium-12.text-center
                             div#map-container
                                 leaflet#map1(ng-init='mapInit("map1")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
                     // #rss(ng-controller='RssController')
@@ -77,10 +77,10 @@ div#menus
                         a(ng-click='split()')
                             i.el-icon-link
                     li
-                        a(ng-click='export($event, 2)')
+                        a(ng-click='splitExport()')
                             i.el-icon-picture
                     li
-                        a(ng-click='print($event, 2)')
+                        a(ng-click='splitPrint()')
                             i.el-icon-print
                     li.has-dropdown
                         a settings
@@ -120,7 +120,7 @@ div#menus
                             a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
                 section.main-section
                     #index-container
-                        section.main-section.medium-12.text-center
+                        section.medium-12.text-center
                             div#map-container
                                 leaflet#map2(ng-init='mapInit("map2")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
                     // #rss(ng-controller='RssController')

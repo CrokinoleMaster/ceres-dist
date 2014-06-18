@@ -132,19 +132,27 @@ angular.module('ceresApp')
             }, 'temperature');
     }
 
+    $scope.$on('resetMaps', function(e) {
+      var base = $scope.layers.baselayers.google;
+      delete $scope.layers.baselayers.google;
+      $scope.$apply();
+      $scope.layers.baselayers.google = base;
+      $scope.$apply();
+    });
+
     $scope.moveCenter = function(i){
       $scope.$parent.centerIndex = i;
     }
 
     // html2canvas
-    $scope.export = function(e, split, callback) {
+    $scope.export = function(callback) {
       var base = $scope.layers.baselayers.google;
         delete $scope.layers.baselayers.google;
         $scope.$apply();
         $scope.layers.baselayers.google = base;
         $scope.$apply();
       window.setTimeout(function(){
-        var target = $(e.target).parents('.main-app').find('.main-section');
+        var target = $('#split-one').find('#map1');
         var splitWidth = $(window).width() / 2;
         html2canvas( target , {
           useCORS: true,
@@ -153,31 +161,20 @@ angular.module('ceresApp')
             var win = window.open('', '_blank');
             var img = document.createElement('img');
             img.src = canvas.toDataURL('image/jpeg');
-            if ($scope.isSplit){
-              canvas.width = splitWidth;
-              if (split === 2){
-                splitWidth = -splitWidth;
-              } else { splitWidth = 0; }
-              canvas.getContext('2d').drawImage(img, splitWidth, 0);
-              img.src = canvas.toDataURL('image/jpeg');
-            }
             var $body = $(win.document.body);
             $body.append(img);
 
             if (callback)
               callback(win);
-            // var link = document.createElement('a');
-            // link.href = canvas.toDataURL('image/jpeg');
-            // $(link).attr('download', 'something');
-            // link.click();
           }
         });
       }, 1000);
     };
 
+
     // print function
-    $scope.print = function(e, split) {
-      $scope.export(e, split, function(win){
+    $scope.print = function() {
+      $scope.export(function(win){
         // chrome bug handle
         if (win.chrome !== null && win.navigator.vendor === 'Google Inc.') {
           win.PPClose = false;
@@ -377,6 +374,10 @@ angular.module('ceresApp')
   $scope.isSplit = false;
   $scope.centerIndex = 0;
 
+  function resetMaps(){
+    $scope.$broadcast('resetMaps');
+  }
+
   // split maps
   $scope.split = function() {
     var legend1 = $('#split-one .legend');
@@ -408,6 +409,59 @@ angular.module('ceresApp')
     }
   }
 
+  $scope.splitExport = function(callback) {
+    resetMaps();
+    window.setTimeout(function(){
+      var target = $('#split-two').find('#map2');
+      var target2 = $('#split-one').find('#map1');
+      var splitWidth = $(window).width() / 2;
+      html2canvas( target , {
+        useCORS: true,
+        logging: true,
+        onrendered: function(canvas) {
+          var win = window.open('', '_blank');
+          var img = document.createElement('img');
+          img.src = canvas.toDataURL('image/jpeg');
+          canvas.width = splitWidth * 2;
+          canvas.getContext('2d').drawImage(img, splitWidth, 0);
+          // other split
+          html2canvas(target2, {
+            useCORS: true,
+            logging: true,
+            onrendered: function(canvas2) {
+              var img2 = document.createElement('img');
+              img2.src = canvas2.toDataURL('image/jpeg');
+              canvas.getContext('2d').drawImage(img2, 0, 0);
+              img.src = canvas.toDataURL('image/jpeg');
+              var $body = $(win.document.body);
+              $body.append(img);
+              if (callback){
+                callback(win);
+              }
+            }
+          })
+        }
+      });
+    }, 1000);
+  }
+
+  // print function
+  $scope.splitPrint = function() {
+    $scope.splitExport(function(win){
+      // chrome bug handle
+      if (win.chrome !== null && win.navigator.vendor === 'Google Inc.') {
+        win.PPClose = false;
+        win.onbeforeunload = function() {
+          if (win.PPCLose === false){
+            return 'Leaving this page will block the parent window!\nPlease select "Stay on this Page option" and use the\nCancel button instead to close the Print Preview Window.\n';
+          }
+        }
+      }
+      //
+      win.print();
+      win.onfocus = win.close();
+    });
+  }
 
 }]);
  'use strict';
