@@ -35,6 +35,7 @@ div#menus
         #opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
+                input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W
@@ -58,7 +59,7 @@ div#menus
                     #index-container
                         section.medium-12.text-center
                             div#map-container
-                                leaflet#map1(ng-init='mapInit("map1")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
+                                leaflet#map1(ng-init='mapInit("map1")' center='center' controls="controls" layers='layers' defaults='defaults' url-hash-center='yes')
                     // #rss(ng-controller='RssController')
                     //     #menu-icon(ng-click="loadFeed()")
                     //         i.el-icon-rss  Weather
@@ -99,6 +100,7 @@ div#menus
         #opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
+                input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W

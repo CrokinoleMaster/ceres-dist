@@ -297,7 +297,7 @@ angular.module('ceresApp')
         fields: userData.fields,
         center: userData.centers[0],
         dates: userData.dates,
-        username: userData.name,
+        username: userData.name
       });
 
       /* add hashing for forward and back between maps */
@@ -330,6 +330,7 @@ angular.module('ceresApp')
     });
 
     $scope.mapInit = function(map){
+
       leafletData.getMap(map).then(function(map) {
         $scope.leaflet = map;
         $scope.addLegend = function(value, name){
