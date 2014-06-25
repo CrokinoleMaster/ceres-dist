@@ -27,6 +27,7 @@ angular.module('ceresApp', [
     $rootScope.$on( '$locationChangeStart', function(event, next, current){
         if (!Userbin.user()){
           if (next === 'http://app.ceresimaging.net/login' ||
+              next === 'http://localhost:9000/login' ||
               next === 'http://localhost:9000/login/demo' ||
               next === 'http://app.ceresimaging.net/login/demo'){
 
@@ -34,7 +35,8 @@ angular.module('ceresApp', [
               $location.path('/').search('');
           }
         } else {
-          if (!/^(http:\/\/localhost:9000\/index)/.test(next)) {
+          if (!/^(http:\/\/localhost:9000\/index)/.test(next) ||
+              !/^(http:\/\/app.ceresimaging.net\/index)/.test(next)) {
             if (Userbin.currentProfile().email === 'demo@gmail.com') {
               Userbin.logout();
             }
