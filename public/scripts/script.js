@@ -8,6 +8,12 @@ angular.module('ceresApp', [
     $routeProvider.when('/', {
         templateUrl: 'partials/login',
         controller: 'LoginController'
+    }).when('/login', {
+        templateUrl: 'partials/login',
+        controller: 'LoginController'
+    }).when('/login/:demo', {
+        templateUrl: 'partials/login',
+        controller: 'LoginController'
     }).when('/index', {
         templateUrl: 'partials/index',
         controller: 'IndexController',
@@ -17,18 +23,25 @@ angular.module('ceresApp', [
     });
 }]).config(['$locationProvider', function($locationProvider){
     $locationProvider.html5Mode(true);
-}]).run( function($rootScope, $location){
+}]).run( function($rootScope, $location, $route){
     $rootScope.$on( '$locationChangeStart', function(event, next, current){
         if (!Userbin.user()){
-            if (next.templateUrl === 'partials/login'){
+          if (next === 'http://app.ceresimaging.net/login' ||
+              next === 'http://localhost:9000/login/demo' ||
+              next === 'http://app.ceresimaging.net/login/demo'){
 
-            } else{
-                $location.path('/');
-            }
+          } else{
+              $location.path('/').search('');
+          }
         } else {
-            if (next.templateUrl !== 'partials/index'){
-                $location.path('/index');
+          if (!/^(http:\/\/localhost:9000\/index)/.test(next)) {
+            if (Userbin.currentProfile().email === 'demo@gmail.com') {
+              Userbin.logout();
             }
+          }
+          if (next.templateUrl !== 'partials/index'){
+              $location.path('/index');
+          }
         }
     });
     $rootScope.$on('$viewContentLoaded', function () {
@@ -370,6 +383,10 @@ angular.module('ceresApp')
   .controller('IndexController', ['$scope', '$location', 'leafletData',
       function($scope, $location, leafletData){
 
+
+  if (Userbin.currentProfile().email === 'demo@gmail.com') {
+  }
+
   $scope.showLayerControl = true;
   $scope.showLegend = true;
   $scope.isSplit = false;
@@ -468,9 +485,16 @@ angular.module('ceresApp')
  'use strict';
 
 angular.module('ceresApp')
-  .controller('LoginController', ['$scope', '$location', function($scope, $location){
-
-}]); 'use strict';
+  .controller('LoginController', ['$scope', '$location', '$routeParams',
+  function($scope, $location, $routeParams){
+    function init() {
+      if ($routeParams.demo === 'demo') {
+        Userbin.login('demo@gmail.com', 'ceres123');
+      }
+    }
+    init();
+}]);
+ 'use strict';
 
 angular.module('ceresApp')
   .controller('MainController', ['$scope', '$location', function($scope, $location){
