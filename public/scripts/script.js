@@ -248,12 +248,9 @@ angular.module('ceresApp')
       });
       $scope.$parent.$watch('centerIndex', function(newvalue){
         $scope.center = $scope.centers[newvalue];
-        var items = $scope.dates.filter(function(date){
-          if ($.inArray($scope.$parent.centerIndex, date.fields) !== -1){
-            return true;
-          }
-        });
-        $scope.currentDate = items.slice(-1)[0].date;
+        $scope.layers.overlays = $scope.fields[newvalue].dates[0].overlays;
+        $scope.dates = $scope.fields[newvalue].dates;
+        $scope.currentDate = $scope.dates.slice(-1)[0].date;
         console.log($scope.currentDate);
       })
       // opacity layers watch
@@ -304,14 +301,14 @@ angular.module('ceresApp')
     function initUserMap(){
       var layers = {
         baselayers: baselayers,
-        overlays: userData.dates.slice(-1)[0].overlays
+        overlays: userData.fields[0].dates.slice(-1)[0].overlays
       };
       angular.extend($scope, {
         layers: layers,
         centers: userData.centers,
         fields: userData.fields,
         center: userData.centers[0],
-        dates: userData.dates,
+        dates: userData.fields[0].dates,
         username: userData.name
       });
 

@@ -54,7 +54,7 @@ div#menus
                         li
                             label Fields
                         li( ng-repeat='center in centers')
-                            a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
+                            a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index].name}}
                 section.main-section
                     #index-container
                         section.medium-12.text-center
@@ -119,7 +119,7 @@ div#menus
                         li
                             label Maps
                         li( ng-repeat='center in centers')
-                            a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index]}}
+                            a(ng-class="{'active':$index===centerIndex}" ng-click='moveCenter($index)') {{fields[$index].name}}
                 section.main-section
                     #index-container
                         section.medium-12.text-center
