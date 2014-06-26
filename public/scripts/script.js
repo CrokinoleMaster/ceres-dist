@@ -38,7 +38,7 @@ angular.module('ceresApp', [
           if (!/^(http:\/\/localhost:9000\/index)/.test(next) &&
               !/^(http:\/\/app.ceresimaging.net\/index)/.test(next) &&
               !/^(http:\/\/localhost:9000\/login\/demo)/.test(next) &&
-              !/^(http:\/\/app.ceresimaging.net\/login\/demo)/.text(next)) {
+              !/^(http:\/\/app.ceresimaging.net\/login\/demo)/.test(next)) {
             if (Userbin.currentProfile().email === 'demo@gmail.com') {
                 Userbin.logout();
             }
