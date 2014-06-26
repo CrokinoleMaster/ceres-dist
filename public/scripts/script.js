@@ -36,9 +36,11 @@ angular.module('ceresApp', [
           }
         } else {
           if (!/^(http:\/\/localhost:9000\/index)/.test(next) &&
-              !/^(http:\/\/app.ceresimaging.net\/index)/.test(next)) {
+              !/^(http:\/\/app.ceresimaging.net\/index)/.test(next) &&
+              !/^(http:\/\/localhost:9000\/login\/demo)/.test(next) &&
+              !/^(http:\/\/app.ceresimaging.net\/login\/demo)/.text(next)) {
             if (Userbin.currentProfile().email === 'demo@gmail.com') {
-              Userbin.logout();
+                Userbin.logout();
             }
           }
           if (next.templateUrl !== 'partials/index'){
