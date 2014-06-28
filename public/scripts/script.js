@@ -250,6 +250,7 @@ angular.module('ceresApp')
       });
       $scope.$parent.$watch('centerIndex', function(newvalue){
         $scope.center = $scope.centers[newvalue];
+        $scope.leaflet.panTo(new L.LatLng($scope.center.lat, $scope.center.lng));
         $scope.layers.overlays = $scope.fields[newvalue].dates[0].overlays;
         $scope.dates = $scope.fields[newvalue].dates;
         $scope.currentDate = $scope.dates.slice(-1)[0].date;
