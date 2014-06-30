@@ -357,7 +357,8 @@ angular.module('ceresApp')
             polyline: {
               metric: false,
               shapeOptions: {
-                color: 'yellow',
+                color: 'magenta',
+                weight: 10
               }
             },
             polygon: {
@@ -369,13 +370,15 @@ angular.module('ceresApp')
                 message: '<strong>do not intersect<strong>'
               },
               shapeOptions: {
-                color: '#bada55'
+                color: 'purple',
+                weight: 10
               }
             },
             circle: {
               metric: false,
               shapeOptions: {
-                color: 'red'
+                color: 'red',
+                weight: 10
               }
             },
             rectangle: {
