@@ -348,6 +348,55 @@ angular.module('ceresApp')
 
       leafletData.getMap(map).then(function(map) {
         $scope.leaflet = map;
+        // draw tools
+        var drawItems = new L.FeatureGroup();
+        map.addLayer(drawItems);
+        var drawControl = new L.Control.Draw({
+          position: 'topleft',
+          draw: {
+            polyline: {
+              metric: false,
+              shapeOptions: {
+                color: 'yellow',
+              }
+            },
+            polygon: {
+              showArea: true,
+              allowIntersection: false,
+              metric: false,
+              drawError: {
+                color: '#e1e100',
+                message: '<strong>do not intersect<strong>'
+              },
+              shapeOptions: {
+                color: '#bada55'
+              }
+            },
+            circle: {
+              metric: false,
+              shapeOptions: {
+                color: 'red'
+              }
+            },
+            rectangle: {
+              shapeOptions: {
+                color: 'blue',
+                weight: 10
+              },
+              metric: false
+            }
+          },
+          edit: {
+            featureGroup: drawItems
+          }
+        });
+        map.addControl(drawControl);
+        map.on('draw:created', function(e) {
+          var type = e.layerType;
+          var layer = e.layer;
+          drawItems.addLayer(layer);
+        });
+
         $scope.addLegend = function(value, name){
           var legend = L.control({ position: 'bottomright' });
           legend.onAdd = leafletLegendHelpers.getOnAddArrayLegend(value, 'legend');
