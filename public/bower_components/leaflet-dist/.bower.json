@@ -2,7 +2,7 @@
   "name": "leaflet",
   "version": "0.7.2",
   "main": [
-    "leaflet.js"
+    "leaflet-src.js"
   ],
   "description": "Leaflet Bower package",
   "ignore": [
