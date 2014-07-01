@@ -383,6 +383,7 @@ angular.module('ceresApp')
               }
             },
             rectangle: {
+              showArea: true,
               shapeOptions: {
                 color: 'blue',
                 weight: 10

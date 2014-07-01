@@ -1,7 +1,7 @@
 {
   "name": "leaflet.draw",
   "main": [
-    "dist/leaflet.draw.js",
+    "dist/leaflet.draw-src.js",
     "dist/leaflet.draw.css"
   ],
   "homepage": "https://github.com/Leaflet/Leaflet.draw",

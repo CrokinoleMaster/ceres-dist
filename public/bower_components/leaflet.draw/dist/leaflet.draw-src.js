@@ -852,7 +852,29 @@ L.Draw.Rectangle = L.Draw.SimpleShape.extend({
 	_fireCreatedEvent: function () {
 		var rectangle = new L.Rectangle(this._shape.getBounds(), this.options.shapeOptions);
 		L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, rectangle);
-	}
+	},
+
+  _onMouseMove: function (e) {
+    var latlng = e.latlng,
+        showArea = this.options.showArea,
+        useMetric = this.options.metric,
+        width, height, latlngs;
+
+
+    this._tooltip.updatePosition(latlng);
+    if (this._isDrawing && showArea) {
+      this._drawShape(latlng);
+
+      latlngs = this._shape._latlngs;
+      this._area = L.GeometryUtil.geodesicArea(latlngs);
+
+      this._tooltip.updateContent({
+        text: this._endLabelText,
+        subtext: '' + L.GeometryUtil.readableArea(this._area, this.options.metric)
+      });
+    }
+  }
+
 });
 
 
