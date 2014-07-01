@@ -399,17 +399,29 @@ angular.module('ceresApp')
         map.on('draw:created', function(e) {
           var type = e.layerType;
           var layer = e.layer;
+          var text = null;
+          var area = null;
           if (type === 'marker') {
             $modal.foundation('reveal', 'open');
             $modal.find('.button').off('click');
             $modal.find('.button').click(function() {
-              var text = $modal.find('input').val();
+              text = $modal.find('input').val();
               if (text) {
                 layer.bindPopup(text);
               }
               drawItems.addLayer(layer);
               $modal.foundation('reveal', 'close');
             });
+          } else if (type === 'rectangle' || type === 'polygon'){
+            area = L.GeometryUtil.geodesicArea(layer._latlngs);
+            area = L.GeometryUtil.readableArea(area);
+            layer.bindPopup('<strong>' + area + '</strong>');
+            drawItems.addLayer(layer);
+          } else if (type === 'circle'){
+            area = Math.pow(layer.getRadius(), 2) * Math.PI;
+            area = (area / 4047).toFixed(2);
+            layer.bindPopup('<strong>' + area + ' acres</strong>');
+            drawItems.addLayer(layer);
           } else {
             drawItems.addLayer(layer);
           }
