@@ -348,6 +348,7 @@ angular.module('ceresApp')
 
       leafletData.getMap(map).then(function(map) {
         $scope.leaflet = map;
+        var $modal = $('#marker-modal');
         // draw tools
         var drawItems = new L.FeatureGroup();
         map.addLayer(drawItems);
@@ -397,7 +398,20 @@ angular.module('ceresApp')
         map.on('draw:created', function(e) {
           var type = e.layerType;
           var layer = e.layer;
-          drawItems.addLayer(layer);
+          if (type === 'marker') {
+            $modal.foundation('reveal', 'open');
+            $modal.find('.button').off('click');
+            $modal.find('.button').click(function() {
+              var text = $modal.find('input').val();
+              if (text) {
+                layer.bindPopup(text);
+              }
+              drawItems.addLayer(layer);
+              $modal.foundation('reveal', 'close');
+            });
+          } else {
+            drawItems.addLayer(layer);
+          }
         });
 
         $scope.addLegend = function(value, name){
