@@ -422,7 +422,7 @@ angular.module('ceresApp')
             $modal.find('.button').click(function() {
               text = $modal.find('input').val();
               if (text) {
-                layer.bindPopup(text,{closeButton: false});
+                layer.bindPopup(text,{closeButton: false, autoPan: false});
               }
               drawItems.addLayer(layer);
               layer.openPopup();
