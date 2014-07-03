@@ -401,15 +401,35 @@ angular.module('ceresApp')
           var layer = e.layer;
           var text = null;
           var area = null;
+          // hack to keep more than one popup open at a time
+          map.openPopup = function(popup, latlng, options) {
+            if (!(popup instanceof L.Popup)) {
+              var content = popup;
+              popup = new L.Popup(options).setContent;
+            }
+            if (latlng) {
+              popup.setLatLng(latlng);
+            }
+            if (this.hasLayer(popup)) {
+              return this;
+            }
+            this._popup = popup;
+            return this.addLayer(popup);
+          }
           if (type === 'marker') {
             $modal.foundation('reveal', 'open');
             $modal.find('.button').off('click');
             $modal.find('.button').click(function() {
               text = $modal.find('input').val();
               if (text) {
-                layer.bindPopup(text);
+                layer.bindPopup(text,{closeButton: false});
               }
               drawItems.addLayer(layer);
+              layer.openPopup();
+              // hack to keep popups open
+              map.on('click', function(e) {
+                layer.openPopup();
+              });
               $modal.foundation('reveal', 'close');
             });
           } else if (type === 'rectangle' || type === 'polygon'){
