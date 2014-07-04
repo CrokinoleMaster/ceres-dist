@@ -165,6 +165,7 @@ angular.module('ceresApp')
 
     // chart functions
     $scope.getStats = function(){
+      $scope.statsLoading = true;
       MapStatsFactory.getStats($scope.fields[$scope.$parent.centerIndex].name,
           $scope.currentDate)
         .then(function(response){
@@ -174,6 +175,7 @@ angular.module('ceresApp')
           } else {
             $scope.stats = false;
           }
+          $scope.statsLoading = false;
         });
     }
     $scope.statsXFunction = function(){
@@ -401,6 +403,22 @@ angular.module('ceresApp')
         // draw tools
         var drawItems = new L.FeatureGroup();
         map.addLayer(drawItems);
+
+        // hack to keep more than one popup open at a time
+        map.openPopup = function(popup, latlng, options) {
+          if (!(popup instanceof L.Popup)) {
+            var content = popup;
+            popup = new L.Popup(options).setContent;
+          }
+          if (latlng) {
+            popup.setLatLng(latlng);
+          }
+          if (this.hasLayer(popup)) {
+            return this;
+          }
+          this._popup = popup;
+          return this.addLayer(popup);
+        }
         var drawControl = new L.Control.Draw({
           position: 'topleft',
           draw: {
@@ -450,21 +468,6 @@ angular.module('ceresApp')
           var layer = e.layer;
           var text = null;
           var area = null;
-          // hack to keep more than one popup open at a time
-          map.openPopup = function(popup, latlng, options) {
-            if (!(popup instanceof L.Popup)) {
-              var content = popup;
-              popup = new L.Popup(options).setContent;
-            }
-            if (latlng) {
-              popup.setLatLng(latlng);
-            }
-            if (this.hasLayer(popup)) {
-              return this;
-            }
-            this._popup = popup;
-            return this.addLayer(popup);
-          }
           if (type === 'marker') {
             $modal.foundation('reveal', 'open');
             $modal.find('.button').off('click');

@@ -73,6 +73,7 @@ div#menus
                     //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                     //         {{feed}}
         #chart-modal1Temp.reveal-modal.small(data-reveal)
+            h3(ng-show='statsLoading') Loading...
             h3(ng-hide='stats.temp') Stats not found.
             h3(ng-show='stats.temp') Water Stress
             nvd3-pie-chart(
@@ -88,9 +89,10 @@ div#menus
                 tooltips='true'
                 showLabels='true'
                 pieLabelsOutside='false')
-                svg
+                svg.nvd3
             a.close-reveal-modal &#215
         #chart-modal1NDVI.reveal-modal.small(data-reveal)
+            h3(ng-show='statsLoading') Loading...
             h3(ng-hide='stats.NDVI') Stats not found.
             h3(ng-show='stats.NDVI') NDVI (Biomass)
             nvd3-pie-chart(
@@ -106,7 +108,7 @@ div#menus
                 tooltips='true'
                 showLabels='true'
                 pieLabelsOutside='false')
-                svg
+                svg.nvd3
             a.close-reveal-modal &#215
 
 
@@ -181,6 +183,7 @@ div#menus
                     //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                     //         {{feed}}
         #chart-modal2Temp.reveal-modal.small(data-reveal)
+            h3(ng-show='statsLoading') Loading...
             h3(ng-hide='stats.temp') Stats not found.
             h3(ng-show='stats.temp') Water Stress
             nvd3-pie-chart(
@@ -196,9 +199,10 @@ div#menus
                 tooltips='true'
                 showLabels='true'
                 pieLabelsOutside='false')
-                svg
+                svg.nvd3
             a.close-reveal-modal &#215
         #chart-modal2NDVI.reveal-modal.small(data-reveal)
+            h3(ng-show='statsLoading') Loading...
             h3(ng-hide='stats.NDVI') Stats not found.
             h3(ng-show='stats.NDVI') NDVI (Biomass)
             nvd3-pie-chart(
@@ -214,7 +218,7 @@ div#menus
                 tooltips='true'
                 showLabels='true'
                 pieLabelsOutside='false')
-                svg
+                svg.nvd3
             a.close-reveal-modal &#215
 
 #marker-modal.reveal-modal.tiny(data-reveal)
