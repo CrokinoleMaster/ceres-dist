@@ -168,6 +168,7 @@ angular.module('ceresApp')
       MapStatsFactory.getStats($scope.fields[$scope.$parent.centerIndex].name,
           $scope.currentDate)
         .then(function(response){
+          console.log(response);
           if (response.data){
             $scope.stats = response.data;
           } else {
@@ -185,14 +186,27 @@ angular.module('ceresApp')
         return d.y;
       };
     }
+    //unstressed to high
     var tempColorArray = [
                 "#4949FA",
                 "#49A248",
                 "#FCFB49",
-                "#FD4B4A"]
-    $scope.statsColorFunction = function() {
+                "#FD4B4A"];
+    // high vigor to low
+    var NDVIColorArray = [
+                "#A5F6A3",
+                "#4AE471",
+                "#4BC64A",
+                "#69B24C",
+                "#526948"];
+    $scope.statsTempColorFunction = function() {
       return function(d, i) {
           return tempColorArray[i];
+        };
+    }
+    $scope.statsNDVIColorFunction = function() {
+      return function(d, i) {
+          return NDVIColorArray[i];
         };
     }
 

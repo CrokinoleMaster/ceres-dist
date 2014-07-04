@@ -18,6 +18,13 @@ div#menus
                     li#print-button.has-tip(ng-hide='isSplit' data-tooltip title='print')
                         a(ng-click='print()')
                             i.el-icon-print
+                    li.has-dropdown
+                        a stats
+                        ul.dropdown
+                            li
+                                a(data-reveal-id="chart-modal1Temp" ng-click='getStats()') stress chart
+                            li
+                                a(data-reveal-id="chart-modal1NDVI" ng-click='getStats()') NDVI chart
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
                         ul.dropdown
@@ -25,8 +32,6 @@ div#menus
                                 a layer control
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
-                            li
-                                a(data-reveal-id="chart-modal1" ng-click='getStats()') chart
                     li.active
                         a.exit-off-canvas(ng-hide='isSplit' href='#' rel='logout') logout
                 ul.left
@@ -67,17 +72,36 @@ div#menus
                     //         i.el-icon-rss  Weather
                     //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                     //         {{feed}}
-        #chart-modal1.reveal-modal.small(data-reveal)
-            h3(ng-hide='stats') Stats not found.
+        #chart-modal1Temp.reveal-modal.small(data-reveal)
+            h3(ng-hide='stats.temp') Stats not found.
+            h3(ng-show='stats.temp') Water Stress
             nvd3-pie-chart(
-                ng-show='stats'
-                data="stats"
-                id="chart1"
+                ng-show='stats.temp'
+                data="stats.temp"
+                id="chart1temp"
                 width="750"
                 height="500"
                 x="statsXFunction()"
                 y="statsYFunction()"
-                color='statsColorFunction()'
+                color='statsTempColorFunction()'
+                showLegend='true'
+                tooltips='true'
+                showLabels='true'
+                pieLabelsOutside='false')
+                svg
+            a.close-reveal-modal &#215
+        #chart-modal1NDVI.reveal-modal.small(data-reveal)
+            h3(ng-hide='stats.NDVI') Stats not found.
+            h3(ng-show='stats.NDVI') NDVI (Biomass)
+            nvd3-pie-chart(
+                ng-show='stats.NDVI'
+                data="stats.NDVI"
+                id="chart1ndvi"
+                width="750"
+                height="500"
+                x="statsXFunction()"
+                y="statsYFunction()"
+                color='statsNDVIColorFunction()'
                 showLegend='true'
                 tooltips='true'
                 showLabels='true'
@@ -102,6 +126,13 @@ div#menus
                     li
                         a(ng-click='splitPrint()')
                             i.el-icon-print
+                    li.has-dropdown
+                        a stats
+                        ul.dropdown
+                            li
+                                a(data-reveal-id="chart-modal2Temp" ng-click='getStats()') stress chart
+                            li
+                                a(data-reveal-id="chart-modal2NDVI" ng-click='getStats()') NDVI chart
                     li.has-dropdown
                         a settings
                         ul.dropdown
@@ -149,6 +180,42 @@ div#menus
                     //         i.el-icon-rss  Weather
                     //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                     //         {{feed}}
+        #chart-modal2Temp.reveal-modal.small(data-reveal)
+            h3(ng-hide='stats.temp') Stats not found.
+            h3(ng-show='stats.temp') Water Stress
+            nvd3-pie-chart(
+                ng-show='stats.temp'
+                data="stats.temp"
+                id="chart2temp"
+                width="750"
+                height="500"
+                x="statsXFunction()"
+                y="statsYFunction()"
+                color='statsTempColorFunction()'
+                showLegend='true'
+                tooltips='true'
+                showLabels='true'
+                pieLabelsOutside='false')
+                svg
+            a.close-reveal-modal &#215
+        #chart-modal2NDVI.reveal-modal.small(data-reveal)
+            h3(ng-hide='stats.NDVI') Stats not found.
+            h3(ng-show='stats.NDVI') NDVI (Biomass)
+            nvd3-pie-chart(
+                ng-show='stats.NDVI'
+                data="stats.NDVI"
+                id="chart2ndvi"
+                width="750"
+                height="500"
+                x="statsXFunction()"
+                y="statsYFunction()"
+                color='statsNDVIColorFunction()'
+                showLegend='true'
+                tooltips='true'
+                showLabels='true'
+                pieLabelsOutside='false')
+                svg
+            a.close-reveal-modal &#215
 
 #marker-modal.reveal-modal.tiny(data-reveal)
     h4 Enter label
