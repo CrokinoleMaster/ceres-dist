@@ -3,7 +3,8 @@
 angular.module('ceresApp', [
   'ngRoute',
   'leaflet-directive',
-  'ui-rangeSlider'
+  'ui-rangeSlider',
+  'nvd3ChartDirectives'
 ]).config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {
         templateUrl: 'partials/login',
@@ -107,7 +108,8 @@ angular.module('ceresApp')
 angular.module('ceresApp')
   .controller('DefaultMapController',
   ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
-  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory) {
+   'MapStatsFactory',
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory) {
 
     $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     function initLegends(){
@@ -159,6 +161,39 @@ angular.module('ceresApp')
 
     $scope.moveCenter = function(i){
       $scope.$parent.centerIndex = i;
+    }
+
+    // chart functions
+    $scope.getStats = function(){
+      MapStatsFactory.getStats($scope.fields[$scope.$parent.centerIndex].name,
+          $scope.currentDate)
+        .then(function(response){
+          if (response.data){
+            $scope.stats = response.data;
+          } else {
+            $scope.stats = false;
+          }
+        });
+    }
+    $scope.statsXFunction = function(){
+        return function(d) {
+            return d.key;
+        };
+    }
+    $scope.statsYFunction = function(){
+      return function(d){
+        return d.y;
+      };
+    }
+    var tempColorArray = [
+                "#4949FA",
+                "#49A248",
+                "#FCFB49",
+                "#FD4B4A"]
+    $scope.statsColorFunction = function() {
+      return function(d, i) {
+          return tempColorArray[i];
+        };
     }
 
     // html2canvas
@@ -660,6 +695,21 @@ angular.module('ceresApp')
           encodeURIComponent(url));
       }
     }
+
+}]);
+ 'use strict';
+
+angular.module('ceresApp')
+  .factory('MapStatsFactory', ['$http', function($http){
+
+    var url = '/api/stats/';
+    var MapStatsFactory = {};
+
+    MapStatsFactory.getStats = function (field, date) {
+        return $http.get(url+Userbin.currentProfile().id+'/'+field+'/'+date);
+    };
+
+    return MapStatsFactory;
 
 }]);
  'use strict';

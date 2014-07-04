@@ -25,6 +25,8 @@ div#menus
                                 a layer control
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
+                            li
+                                a(data-reveal-id="chart-modal1" ng-click='getStats()') chart
                     li.active
                         a.exit-off-canvas(ng-hide='isSplit' href='#' rel='logout') logout
                 ul.left
@@ -65,6 +67,23 @@ div#menus
                     //         i.el-icon-rss  Weather
                     //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                     //         {{feed}}
+        #chart-modal1.reveal-modal.small(data-reveal)
+            h3(ng-hide='stats') Stats not found.
+            nvd3-pie-chart(
+                ng-show='stats'
+                data="stats"
+                id="chart1"
+                width="750"
+                height="500"
+                x="statsXFunction()"
+                y="statsYFunction()"
+                color='statsColorFunction()'
+                showLegend='true'
+                tooltips='true'
+                showLabels='true'
+                pieLabelsOutside='false')
+                svg
+            a.close-reveal-modal &#215
 
 
     div.main-app#split-two.split-view(ng-show='isSplit' ng-controller='DefaultMapController')

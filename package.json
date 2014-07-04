@@ -1,6 +1,6 @@
 {
   "name": "ceres",
-  "version": "0.0.0",
+  "version": "0.5.0",
   "dependencies": {
     "body-parser": "~1.0.0",
     "compression": "~1.0.1",
