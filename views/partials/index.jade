@@ -23,8 +23,8 @@ div#menus
                         ul.dropdown
                             li
                                 a(data-reveal-id="chart-modal1Temp" ng-click='getStats()') stress chart
-                            li
-                                a(data-reveal-id="chart-modal1NDVI" ng-click='getStats()') NDVI chart
+                            // li
+                            //     a(data-reveal-id="chart-modal1NDVI" ng-click='getStats()') NDVI chart
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
                         ul.dropdown
@@ -72,24 +72,25 @@ div#menus
                     //         i.el-icon-rss  Weather
                     //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                     //         {{feed}}
-        #chart-modal1Temp.reveal-modal.small(data-reveal)
+        #chart-modal1Temp.reveal-modal.small.chart(data-reveal)
             h3(ng-show='statsLoading') Loading...
             h3(ng-hide='stats.temp') Stats not found.
             h3(ng-show='stats.temp') Water Stress
-            nvd3-pie-chart(
-                ng-show='stats.temp'
-                data="stats.temp"
-                id="chart1temp"
-                width="750"
-                height="500"
-                x="statsXFunction()"
-                y="statsYFunction()"
-                color='statsTempColorFunction()'
-                showLegend='true'
-                tooltips='true'
-                showLabels='true'
-                pieLabelsOutside='false')
-                svg.nvd3
+            .chart-container
+                nvd3-pie-chart(
+                    ng-show='stats.temp'
+                    data="stats.temp"
+                    id="chart1temp"
+                    width="500"
+                    height="500"
+                    x="statsXFunction()"
+                    y="statsYFunction()"
+                    color='statsTempColorFunction()'
+                    showLegend='true'
+                    tooltips='true'
+                    showLabels='true'
+                    pieLabelsOutside='false')
+                    svg.nvd3
             a.close-reveal-modal &#215
         #chart-modal1NDVI.reveal-modal.small(data-reveal)
             h3(ng-show='statsLoading') Loading...
@@ -133,8 +134,8 @@ div#menus
                         ul.dropdown
                             li
                                 a(data-reveal-id="chart-modal2Temp" ng-click='getStats()') stress chart
-                            li
-                                a(data-reveal-id="chart-modal2NDVI" ng-click='getStats()') NDVI chart
+                            // li
+                            //     a(data-reveal-id="chart-modal2NDVI" ng-click='getStats()') NDVI chart
                     li.has-dropdown
                         a settings
                         ul.dropdown
@@ -182,24 +183,25 @@ div#menus
                     //         i.el-icon-rss  Weather
                     //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
                     //         {{feed}}
-        #chart-modal2Temp.reveal-modal.small(data-reveal)
+        #chart-modal2Temp.reveal-modal.small.chart(data-reveal)
             h3(ng-show='statsLoading') Loading...
             h3(ng-hide='stats.temp') Stats not found.
             h3(ng-show='stats.temp') Water Stress
-            nvd3-pie-chart(
-                ng-show='stats.temp'
-                data="stats.temp"
-                id="chart2temp"
-                width="750"
-                height="500"
-                x="statsXFunction()"
-                y="statsYFunction()"
-                color='statsTempColorFunction()'
-                showLegend='true'
-                tooltips='true'
-                showLabels='true'
-                pieLabelsOutside='false')
-                svg.nvd3
+            .chart-container
+                nvd3-pie-chart(
+                    ng-show='stats.temp'
+                    data="stats.temp"
+                    id="chart2temp"
+                    width="500"
+                    height="500"
+                    x="statsXFunction()"
+                    y="statsYFunction()"
+                    color='statsTempColorFunction()'
+                    showLegend='true'
+                    tooltips='true'
+                    showLabels='true'
+                    pieLabelsOutside='false')
+                    svg.nvd3
             a.close-reveal-modal &#215
         #chart-modal2NDVI.reveal-modal.small(data-reveal)
             h3(ng-show='statsLoading') Loading...
