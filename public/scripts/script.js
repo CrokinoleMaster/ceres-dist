@@ -305,8 +305,7 @@ angular.module('ceresApp')
         $scope.leaflet.panTo(new L.LatLng($scope.center.lat, $scope.center.lng));
         $scope.layers.overlays = dates[Object.keys(dates)[0]].overlays;
         $scope.dates = $scope.fields[newvalue].dates;
-        $scope.currentDate = Object.keys(dates)[0];
-        console.log($scope.currentDate);
+        $scope.currentDate = Object.keys(dates).pop();
       })
       // opacity layers watch
       $scope.$watch('layers.overlays.NDVI.layerParams.opacity', function(newvalue){

@@ -149,7 +149,7 @@ div#menus
                     li
                         a Date
                     li
-                        select(ng-model='currentDate' ng-options='item.date as item.date for item in dates | date: centerIndex')
+                        select(ng-model='currentDate' ng-options='item as item for (item, key) in dates')
         #opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
