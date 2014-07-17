@@ -84,19 +84,19 @@ angular.module('ceresApp')
   }
 });
 
-angular.module('ceresApp')
-.filter('date', function(){
-  return function(items, fieldIndex) {
-    if (items){
-      items = items.filter(function(date){
-        if ($.inArray(fieldIndex, date.fields) !== -1){
-          return true;
-        }
-      });
-    }
-    return items;
-  }
-});
+// angular.module('ceresApp')
+// .filter('date', function(){
+//   return function(items, fieldIndex) {
+//     if (items){
+//       items = items.filter(function(date){
+//         if ($.inArray(fieldIndex, date.fields) !== -1){
+//           return true;
+//         }
+//       });
+//     }
+//     return items;
+//   }
+// });
 
 angular.module('ceresApp')
 .filter('percentage', function(){
@@ -290,9 +290,9 @@ angular.module('ceresApp')
 
     function watches(){
       $scope.$watch('currentDate', function(newvalue){
-        $scope.dates.forEach(function(i){
-          if (i.date === newvalue){
-            $scope.layers.overlays = i.overlays;
+        Object.keys($scope.dates).forEach(function(date) {
+          if (date === newvalue) {
+            $scope.layers.overlays = $scope.dates[date].overlays;
           }
         });
       });
@@ -300,27 +300,28 @@ angular.module('ceresApp')
         $scope.leaflet.invalidateSize(false);
       });
       $scope.$parent.$watch('centerIndex', function(newvalue){
+        var dates = $scope.fields[newvalue].dates;
         $scope.center = $scope.centers[newvalue];
         $scope.leaflet.panTo(new L.LatLng($scope.center.lat, $scope.center.lng));
-        $scope.layers.overlays = $scope.fields[newvalue].dates[0].overlays;
+        $scope.layers.overlays = dates[Object.keys(dates)[0]].overlays;
         $scope.dates = $scope.fields[newvalue].dates;
-        $scope.currentDate = $scope.dates.slice(-1)[0].date;
+        $scope.currentDate = Object.keys(dates)[0];
         console.log($scope.currentDate);
       })
       // opacity layers watch
       $scope.$watch('layers.overlays.NDVI.layerParams.opacity', function(newvalue){
         if ($scope.layers.overlays.NDVI){
-          $scope.dates.forEach(function(i){
-            if (i.overlays.NDVI)
-              i.overlays.NDVI.layerParams.opacity = newvalue
+          Object.keys($scope.dates).forEach(function(date) {
+            if ($scope.dates[date].overlays.NDVI)
+              $scope.dates[date].overlays.NDVI.layerParams.opacity = newvalue;
           });
         }
       });
       $scope.$watch('layers.overlays.temp.layerParams.opacity', function(newvalue){
         if ($scope.layers.overlays.temp){
-          $scope.dates.forEach(function(i){
-            if (i.overlays.temp)
-              i.overlays.temp.layerParams.opacity = newvalue
+          Object.keys($scope.dates).forEach(function(date) {
+            if ($scope.dates[date].overlays.temp)
+              $scope.dates[date].overlays.temp.layerParams.opacity = newvalue;
           });
         }
       });
@@ -353,16 +354,18 @@ angular.module('ceresApp')
     }
 
     function initUserMap(){
+      var dates = userData.fields[0].dates;
       var layers = {
         baselayers: baselayers,
-        overlays: userData.fields[0].dates.slice(-1)[0].overlays
+        overlays: dates[Object.keys(dates)[0]].overlays
       };
+
       angular.extend($scope, {
         layers: layers,
-        centers: userData.centers,
+        centers: userData.fields,
         fields: userData.fields,
-        center: userData.centers[0],
-        dates: userData.fields[0].dates,
+        center: userData.fields[0],
+        dates: dates,
         username: userData.name
       });
 
