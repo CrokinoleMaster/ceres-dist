@@ -10,14 +10,7 @@ div#menus
             section.top-bar-section
                 ul.right
                     li#split-button.has-tip(data-tooltip title='split view')
-                        a(ng-hide='isSplit' ng-click='split()')
-                            i.el-icon-link
-                    li#export-button.has-tip(ng-hide='isSplit' data-tooltip title='export')
-                        a(ng-click='export()')
-                            i.el-icon-picture
-                    li#print-button.has-tip(ng-hide='isSplit' data-tooltip title='print')
-                        a(ng-click='print()')
-                            i.el-icon-print
+                        a(ng-hide='isSplit' ng-click='split()') split
                     li.has-dropdown
                         a stats
                         ul.dropdown
@@ -121,14 +114,7 @@ div#menus
             section.top-bar-section
                 ul.right
                     li
-                        a(ng-click='split()')
-                            i.el-icon-link
-                    li
-                        a(ng-click='splitExport()')
-                            i.el-icon-picture
-                    li
-                        a(ng-click='splitPrint()')
-                            i.el-icon-print
+                        a(ng-click='split()') split
                     li.has-dropdown
                         a stats
                         ul.dropdown

@@ -198,52 +198,6 @@ angular.module('ceresApp')
         };
     }
 
-    // html2canvas
-    $scope.export = function(callback) {
-      var base = $scope.layers.baselayers.google;
-        delete $scope.layers.baselayers.google;
-        $scope.$apply();
-        $scope.layers.baselayers.google = base;
-        $scope.$apply();
-      window.setTimeout(function(){
-        var target = $('#split-one').find('#map1');
-        var splitWidth = $(window).width() / 2;
-        html2canvas( target , {
-          useCORS: true,
-          logging: true,
-          onrendered: function(canvas) {
-            var win = window.open('', '_blank');
-            var img = document.createElement('img');
-            img.src = canvas.toDataURL('image/jpeg');
-            var $body = $(win.document.body);
-            $body.append(img);
-
-            if (callback)
-              callback(win);
-          }
-        });
-      }, 1000);
-    };
-
-
-    // print function
-    $scope.print = function() {
-      $scope.export(function(win){
-        // chrome bug handle
-        if (win.chrome !== null && win.navigator.vendor === 'Google Inc.') {
-          win.PPClose = false;
-          win.onbeforeunload = function() {
-            if (win.PPCLose === false){
-              return 'Leaving this page will block the parent window!\nPlease select "Stay on this Page option" and use the\nCancel button instead to close the Print Preview Window.\n';
-            }
-          }
-        }
-        //
-        win.print();
-        win.onfocus = win.close();
-      });
-    }
-
     // sync maps
     $scope.sync = function() {
       var move1;
@@ -410,33 +364,36 @@ angular.module('ceresApp')
         var drawControl = new L.Control.Draw({
           position: 'topleft',
           draw: {
-            polyline: {
-              metric: false,
-              shapeOptions: {
-                color: 'magenta',
-                weight: 10
-              }
-            },
-            polygon: {
-              showArea: true,
-              allowIntersection: false,
-              metric: false,
-              drawError: {
-                color: '#e1e100',
-                message: '<strong>do not intersect<strong>'
-              },
-              shapeOptions: {
-                color: 'purple',
-                weight: 10
-              }
-            },
-            circle: {
-              metric: false,
-              shapeOptions: {
-                color: 'red',
-                weight: 10
-              }
-            },
+            // polyline: {
+            //   metric: false,
+            //   shapeOptions: {
+            //     color: 'magenta',
+            //     weight: 10
+            //   }
+            // },
+            polyline: false,
+            // polygon: {
+            //   showArea: true,
+            //   allowIntersection: false,
+            //   metric: false,
+            //   drawError: {
+            //     color: '#e1e100',
+            //     message: '<strong>do not intersect<strong>'
+            //   },
+            //   shapeOptions: {
+            //     color: 'purple',
+            //     weight: 10
+            //   }
+            // },
+            polygon: false,
+            // circle: {
+            //   metric: false,
+            //   shapeOptions: {
+            //     color: 'red',
+            //     weight: 10
+            //   }
+            // },
+            circle: false,
             rectangle: {
               showArea: true,
               shapeOptions: {
@@ -566,60 +523,6 @@ angular.module('ceresApp')
     if ($scope.isSplit){
       legend1.hide();
     }
-  }
-
-  $scope.splitExport = function(callback) {
-    resetMaps();
-    window.setTimeout(function(){
-      var target = $('#split-two').find('#map2');
-      var target2 = $('#split-one').find('#map1');
-      var splitWidth = $(window).width() / 2;
-      html2canvas( target , {
-        useCORS: true,
-        logging: true,
-        onrendered: function(canvas) {
-          var win = window.open('', '_blank');
-          var img = document.createElement('img');
-          img.src = canvas.toDataURL('image/jpeg');
-          canvas.width = splitWidth * 2;
-          canvas.getContext('2d').drawImage(img, splitWidth, 0);
-          // other split
-          html2canvas(target2, {
-            useCORS: true,
-            logging: true,
-            onrendered: function(canvas2) {
-              var img2 = document.createElement('img');
-              img2.src = canvas2.toDataURL('image/jpeg');
-              canvas.getContext('2d').drawImage(img2, 0, 0);
-              img.src = canvas.toDataURL('image/jpeg');
-              var $body = $(win.document.body);
-              $body.append(img);
-              if (callback){
-                callback(win);
-              }
-            }
-          })
-        }
-      });
-    }, 1000);
-  }
-
-  // print function
-  $scope.splitPrint = function() {
-    $scope.splitExport(function(win){
-      // chrome bug handle
-      if (win.chrome !== null && win.navigator.vendor === 'Google Inc.') {
-        win.PPClose = false;
-        win.onbeforeunload = function() {
-          if (win.PPCLose === false){
-            return 'Leaving this page will block the parent window!\nPlease select "Stay on this Page option" and use the\nCancel button instead to close the Print Preview Window.\n';
-          }
-        }
-      }
-      //
-      win.print();
-      win.onfocus = win.close();
-    });
   }
 
 }]);
