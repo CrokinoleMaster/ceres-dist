@@ -84,20 +84,6 @@ angular.module('ceresApp')
   }
 });
 
-// angular.module('ceresApp')
-// .filter('date', function(){
-//   return function(items, fieldIndex) {
-//     if (items){
-//       items = items.filter(function(date){
-//         if ($.inArray(fieldIndex, date.fields) !== -1){
-//           return true;
-//         }
-//       });
-//     }
-//     return items;
-//   }
-// });
-
 angular.module('ceresApp')
 .filter('percentage', function(){
   return function(ratio){
@@ -334,13 +320,6 @@ angular.module('ceresApp')
         type: 'google'
       }
     };
-    // var baselayers = {
-    //   baseLayer: {
-    //     name: 'base',
-    //     url:  'http://api.tiles.mapbox.com/v3/huaruiwu.ia037n1a/{z}/{x}/{y}.png',
-    //     type: 'xyz',
-    //   }
-    // }
 
     function getUser(){
       UserMapsFactory.getMap()
@@ -354,6 +333,13 @@ angular.module('ceresApp')
 
     function initUserMap(){
       var dates = userData.fields[0].dates;
+      Object.keys(dates).forEach(function(date) {
+        if (dates[date].overlays.NDVI){
+          var ndvi = dates[date].overlays.NDVI;
+          delete dates[date].overlays.NDVI;
+          dates[date].overlays.NDVI = ndvi;
+        }
+      });
       var layers = {
         baselayers: baselayers,
         overlays: dates[Object.keys(dates)[0]].overlays
