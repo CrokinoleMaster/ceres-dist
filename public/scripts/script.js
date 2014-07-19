@@ -97,7 +97,6 @@ angular.module('ceresApp')
    'MapStatsFactory',
   function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory) {
 
-    $scope.center = {lat: 36.51, lng: -120.452, zoom: 10 };
     function initLegends(){
       $scope.legendTemp = $scope.addLegend({
               position: "bottomleft",
@@ -149,54 +148,40 @@ angular.module('ceresApp')
       $scope.$parent.centerIndex = i;
     }
 
-    // chart functions
-    $scope.getStats = function(){
-      $scope.statsLoading = true;
-      MapStatsFactory.getStats($scope.fields[$scope.$parent.centerIndex].name,
-          $scope.currentDate)
-        .then(function(response){
-          console.log(response);
-          if (response.data){
-            $scope.stats = response.data;
-          } else {
-            $scope.stats = false;
+    // stats
+    MapStatsFactory.getStats().then(function(stats) {
+      $scope.stats = stats.data.fields;
+      $scope.toolTipContent = function() {
+        return function(key, x, y) {
+          return '<strong>'+key+'</strong>' + '<p>'+y+'</p>'
+        }
+      }
+      var tempColors = { 'high': "red",
+                        'moderate': "yellow",
+                        'low': "green",
+                        'unstressed': "blue"};
+      $scope.tempColor = function() {
+        return function(d, i) {
+          return tempColors[d.key];
+        }
+      }
+
+      if ($scope.currentDate) {
+        $scope.stats.forEach(function(field) {
+          if (field.name === $scope.center.name) {
+            var layerStats = field.dates[$scope.currentDate];
+            Object.keys(layerStats).forEach(function(layerType) {
+              $scope['stat'+layerType] = [];
+              Object.keys(layerStats[layerType]).forEach(function(key) {
+                $scope['stat'+layerType].push({key: key,
+                  values: [[1, layerStats[layerType][key]], [2, layerStats[layerType][key]]]});
+              });
+            });
           }
-          $scope.statsLoading = false;
         });
-    }
-    $scope.statsXFunction = function(){
-        return function(d) {
-            return d.key;
-        };
-    }
-    $scope.statsYFunction = function(){
-      return function(d){
-        return d.y;
-      };
-    }
-    //unstressed to high
-    var tempColorArray = [
-                "#4949FA",
-                "#49A248",
-                "#FCFB49",
-                "#FD4B4A"];
-    // high vigor to low
-    var NDVIColorArray = [
-                "#A5F6A3",
-                "#4AE471",
-                "#4BC64A",
-                "#69B24C",
-                "#526948"];
-    $scope.statsTempColorFunction = function() {
-      return function(d, i) {
-          return tempColorArray[i];
-        };
-    }
-    $scope.statsNDVIColorFunction = function() {
-      return function(d, i) {
-          return NDVIColorArray[i];
-        };
-    }
+      }
+
+    });
 
     // sync maps
     $scope.sync = function() {
@@ -235,6 +220,21 @@ angular.module('ceresApp')
             $scope.layers.overlays = $scope.dates[date].overlays;
           }
         });
+        // get layer stats and set to $scope['stat'+layerType]
+        if ($scope.stats) {
+          $scope.stats.forEach(function(field) {
+            if (field.name === $scope.center.name) {
+              var layerStats = field.dates[newvalue];
+              Object.keys(layerStats).forEach(function(layerType) {
+                $scope['stat'+layerType] = [];
+                Object.keys(layerStats[layerType]).forEach(function(key) {
+                  $scope['stat'+layerType].push({key: key,
+                    values: [[1, layerStats[layerType][key]], [2, layerStats[layerType][key]]]});
+                });
+              });
+            }
+          });
+        }
       });
       $scope.$watch('isSplit', function(newvalue){
         $scope.leaflet.invalidateSize(false);
@@ -305,7 +305,7 @@ angular.module('ceresApp')
         fields: userData.fields,
         center: userData.fields[0],
         dates: dates,
-        username: userData.name
+        username: userData.user
       });
 
       /* add hashing for forward and back between maps */
@@ -613,8 +613,8 @@ angular.module('ceresApp')
     var url = '/api/stats/';
     var MapStatsFactory = {};
 
-    MapStatsFactory.getStats = function (field, date) {
-        return $http.get(url+Userbin.currentProfile().id+'/'+field+'/'+date);
+    MapStatsFactory.getStats = function (userId) {
+        return $http.get(url+Userbin.currentProfile().id);
     };
 
     return MapStatsFactory;

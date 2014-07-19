@@ -16,8 +16,6 @@ div#menus
                         ul.dropdown
                             li
                                 a(data-reveal-id="chart-modal1Temp" ng-click='getStats()') stress chart
-                            // li
-                            //     a(data-reveal-id="chart-modal1NDVI" ng-click='getStats()') NDVI chart
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
                         ul.dropdown
@@ -32,11 +30,17 @@ div#menus
                         a Date
                     li
                         select(ng-model='currentDate' ng-options='item as item for (item, key) in dates')
-        #opacity-sliders.row(ng-show='showLayerControl')
+        .opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
+
+        .layerStats.row
+            .stats-container.small-12
+                nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                    svg
+
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W
             span &nbsp;&nbsp;
@@ -60,50 +64,6 @@ div#menus
                         section.medium-12.text-center
                             div#map-container
                                 leaflet#map1(ng-init='mapInit("map1")' center='center'  layers='layers' defaults='defaults' url-hash-center='yes')
-                    // #rss(ng-controller='RssController')
-                    //     #menu-icon(ng-click="loadFeed()")
-                    //         i.el-icon-rss  Weather
-                    //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
-                    //         {{feed}}
-        #chart-modal1Temp.reveal-modal.small.chart(data-reveal)
-            h3(ng-show='statsLoading') Loading...
-            h3(ng-hide='stats.temp') Stats not found.
-            h3(ng-show='stats.temp') Water Stress
-            .chart-container
-                nvd3-pie-chart(
-                    ng-show='stats.temp'
-                    data="stats.temp"
-                    id="chart1temp"
-                    width="500"
-                    height="500"
-                    x="statsXFunction()"
-                    y="statsYFunction()"
-                    color='statsTempColorFunction()'
-                    showLegend='true'
-                    tooltips='true'
-                    showLabels='true'
-                    pieLabelsOutside='false')
-                    svg.nvd3
-            a.close-reveal-modal &#215
-        #chart-modal1NDVI.reveal-modal.small(data-reveal)
-            h3(ng-show='statsLoading') Loading...
-            h3(ng-hide='stats.NDVI') Stats not found.
-            h3(ng-show='stats.NDVI') NDVI (Biomass)
-            nvd3-pie-chart(
-                ng-show='stats.NDVI'
-                data="stats.NDVI"
-                id="chart1ndvi"
-                width="750"
-                height="500"
-                x="statsXFunction()"
-                y="statsYFunction()"
-                color='statsNDVIColorFunction()'
-                showLegend='true'
-                tooltips='true'
-                showLabels='true'
-                pieLabelsOutside='false')
-                svg.nvd3
-            a.close-reveal-modal &#215
 
 
     div.main-app#split-two.split-view(ng-show='isSplit' ng-controller='DefaultMapController')
@@ -120,8 +80,6 @@ div#menus
                         ul.dropdown
                             li
                                 a(data-reveal-id="chart-modal2Temp" ng-click='getStats()') stress chart
-                            // li
-                            //     a(data-reveal-id="chart-modal2NDVI" ng-click='getStats()') NDVI chart
                     li.has-dropdown
                         a settings
                         ul.dropdown
@@ -136,11 +94,17 @@ div#menus
                         a Date
                     li
                         select(ng-model='currentDate' ng-options='item as item for (item, key) in dates')
-        #opacity-sliders.row(ng-show='showLayerControl')
+        .opacity-sliders.row(ng-show='showLayerControl')
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
+
+        .layerStats.row
+            .stats-container.small-12
+                nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                    svg
+
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W
             span &nbsp;&nbsp;
@@ -164,50 +128,6 @@ div#menus
                         section.medium-12.text-center
                             div#map-container
                                 leaflet#map2(ng-init='mapInit("map2")' center='center' layers='layers' defaults='defaults' url-hash-center='yes')
-                    // #rss(ng-controller='RssController')
-                    //     #menu-icon(ng-click="loadFeed()")
-                    //         i.el-icon-rss  Weather
-                    //     p(ng-class="{'split': isSplit}" ng-show="feedDisplay").
-                    //         {{feed}}
-        #chart-modal2Temp.reveal-modal.small.chart(data-reveal)
-            h3(ng-show='statsLoading') Loading...
-            h3(ng-hide='stats.temp') Stats not found.
-            h3(ng-show='stats.temp') Water Stress
-            .chart-container
-                nvd3-pie-chart(
-                    ng-show='stats.temp'
-                    data="stats.temp"
-                    id="chart2temp"
-                    width="500"
-                    height="500"
-                    x="statsXFunction()"
-                    y="statsYFunction()"
-                    color='statsTempColorFunction()'
-                    showLegend='true'
-                    tooltips='true'
-                    showLabels='true'
-                    pieLabelsOutside='false')
-                    svg.nvd3
-            a.close-reveal-modal &#215
-        #chart-modal2NDVI.reveal-modal.small(data-reveal)
-            h3(ng-show='statsLoading') Loading...
-            h3(ng-hide='stats.NDVI') Stats not found.
-            h3(ng-show='stats.NDVI') NDVI (Biomass)
-            nvd3-pie-chart(
-                ng-show='stats.NDVI'
-                data="stats.NDVI"
-                id="chart2ndvi"
-                width="750"
-                height="500"
-                x="statsXFunction()"
-                y="statsYFunction()"
-                color='statsNDVIColorFunction()'
-                showLegend='true'
-                tooltips='true'
-                showLabels='true'
-                pieLabelsOutside='false')
-                svg.nvd3
-            a.close-reveal-modal &#215
 
 #marker-modal.reveal-modal.tiny(data-reveal)
     h4 Enter label
