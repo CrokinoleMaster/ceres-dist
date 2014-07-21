@@ -221,15 +221,16 @@ angular.module('ceresApp')
         if ($scope.stats) {
           if ($scope.stats[$scope.center.name] &&
             $scope.stats[$scope.center.name][newvalue]) {
-              $scope.$parent.showStats = true;
               if ($scope.stats[$scope.center.name][newvalue].temp) {
                 $scope.stattemp = $scope.stats[$scope.center.name][newvalue].temp;
+              } else {
+                $scope.stattemp = null;
               }
               if ($scope.stats[$scope.center.name][newvalue].NDVI) {
                 $scope.statNDVI = $scope.stats[$scope.center.name][newvalue].NDVI;
+              } else {
+                $scope.statNDVI = null;
               }
-            } else {
-              $scope.$parent.showStats = false;
             }
         }
       });

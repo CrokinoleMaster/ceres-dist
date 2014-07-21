@@ -35,6 +35,8 @@ div#menus
 
         .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
+                label
+                    strong Water Stress
                 nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
                     svg
 
@@ -96,6 +98,8 @@ div#menus
 
         .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
+                label
+                    strong Water Stress
                 nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
                     svg
 
