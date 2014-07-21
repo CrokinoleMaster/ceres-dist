@@ -231,6 +231,9 @@ angular.module('ceresApp')
               } else {
                 $scope.statNDVI = null;
               }
+            } else {
+              $scope.stattemp = null;
+              $scope.statNDVI = null;
             }
         }
       });
