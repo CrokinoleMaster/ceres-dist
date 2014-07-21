@@ -11,11 +11,6 @@ div#menus
                 ul.right
                     li#split-button.has-tip(data-tooltip title='split view')
                         a(ng-hide='isSplit' ng-click='split()') split
-                    li.has-dropdown
-                        a stats
-                        ul.dropdown
-                            li
-                                a(data-reveal-id="chart-modal1Temp" ng-click='getStats()') stress chart
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
                         ul.dropdown
@@ -75,11 +70,6 @@ div#menus
                 ul.right
                     li
                         a(ng-click='split()') split
-                    li.has-dropdown
-                        a stats
-                        ul.dropdown
-                            li
-                                a(data-reveal-id="chart-modal2Temp" ng-click='getStats()') stress chart
                     li.has-dropdown
                         a settings
                         ul.dropdown
