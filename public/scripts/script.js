@@ -150,7 +150,7 @@ angular.module('ceresApp')
 
     // stats
     MapStatsFactory.getStats().then(function(stats) {
-      $scope.stats = stats.data.fields;
+      $scope.stats = stats.data;
       $scope.toolTipContent = function() {
         return function(key, x, y) {
           return '<strong>'+key+'</strong>' + '<p>'+y+'</p>'
@@ -167,18 +167,15 @@ angular.module('ceresApp')
       }
 
       if ($scope.currentDate) {
-        $scope.stats.forEach(function(field) {
-          if (field.name === $scope.center.name) {
-            var layerStats = field.dates[$scope.currentDate];
-            Object.keys(layerStats).forEach(function(layerType) {
-              $scope['stat'+layerType] = [];
-              Object.keys(layerStats[layerType]).forEach(function(key) {
-                $scope['stat'+layerType].push({key: key,
-                  values: [[1, layerStats[layerType][key]], [2, layerStats[layerType][key]]]});
-              });
-            });
-          }
-        });
+        if ($scope.stats[$scope.center.name] &&
+          $scope.stats[$scope.center.name][$scope.currentDate]) {
+            if ($scope.stats[$scope.center.name][$scope.currentDate].temp) {
+              $scope.stattemp = $scope.stats[$scope.center.name][$scope.currentDate].temp;
+            }
+            if ($scope.stats[$scope.center.name][$scope.currentDate].NDVI) {
+              $scope.statNDVI = $scope.stats[$scope.center.name][$scope.currentDate].NDVI;
+            }
+        }
       }
 
     });
@@ -222,18 +219,18 @@ angular.module('ceresApp')
         });
         // get layer stats and set to $scope['stat'+layerType]
         if ($scope.stats) {
-          $scope.stats.forEach(function(field) {
-            if (field.name === $scope.center.name) {
-              var layerStats = field.dates[newvalue];
-              Object.keys(layerStats).forEach(function(layerType) {
-                $scope['stat'+layerType] = [];
-                Object.keys(layerStats[layerType]).forEach(function(key) {
-                  $scope['stat'+layerType].push({key: key,
-                    values: [[1, layerStats[layerType][key]], [2, layerStats[layerType][key]]]});
-                });
-              });
+          if ($scope.stats[$scope.center.name] &&
+            $scope.stats[$scope.center.name][newvalue]) {
+              $scope.$parent.showStats = true;
+              if ($scope.stats[$scope.center.name][newvalue].temp) {
+                $scope.stattemp = $scope.stats[$scope.center.name][newvalue].temp;
+              }
+              if ($scope.stats[$scope.center.name][newvalue].NDVI) {
+                $scope.statNDVI = $scope.stats[$scope.center.name][newvalue].NDVI;
+              }
+            } else {
+              $scope.$parent.showStats = false;
             }
-          });
         }
       });
       $scope.$watch('isSplit', function(newvalue){
@@ -487,6 +484,7 @@ angular.module('ceresApp')
 
   $scope.showLayerControl = true;
   $scope.showLegend = true;
+  $scope.showStats = true;
   $scope.isSplit = false;
   $scope.centerIndex = 0;
 
@@ -508,6 +506,10 @@ angular.module('ceresApp')
   // toggle layer controls
   $scope.toggleLayerControl = function(){
     $scope.showLayerControl = !$scope.showLayerControl;
+  }
+
+  $scope.toggleStats = function() {
+    $scope.showStats = !$scope.showStats;
   }
 
   // toggle legends

@@ -16,6 +16,8 @@ div#menus
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
                                 a layer control
+                            li(ng-class="{'active': showStats}" ng-click='toggleStats()')
+                                a stats
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
                     li.active
@@ -31,7 +33,7 @@ div#menus
                 input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
 
-        .layerStats.row(ng-show='stattemp')
+        .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
                 nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
                     svg
@@ -75,6 +77,8 @@ div#menus
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
                                 a layer control
+                            li(ng-class="{'active': showStats}" ng-click='toggleStats()')
+                                a stats
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
                     li.active
@@ -90,7 +94,7 @@ div#menus
                 input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
                 div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
 
-        .layerStats.row(ng-show='stattemp')
+        .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
                 nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
                     svg
