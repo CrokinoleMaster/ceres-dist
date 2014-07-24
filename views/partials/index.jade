@@ -12,6 +12,13 @@ div#menus
                     li#split-button.has-tip(data-tooltip title='split view')
                         a(ng-hide='isSplit' ng-click='split()') split
                     li.has-dropdown(ng-hide='isSplit')
+                        a(href='#') stats
+                        ul.dropdown
+                            li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
+                                a current
+                            li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
+                                a past
+                    li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
@@ -35,10 +42,21 @@ div#menus
 
         .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
-                label
-                    strong Water Stress
-                nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
-                    svg
+                .row
+                    label
+                        strong Water Stress
+                    .columns(ng-class="statNumber ==3 && 'small-4' || statNumber >1 && 'small-6' || 'small-12'")
+                        nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                            svg
+                        label {{currentDate}}
+                    .columns(ng-show='statNumber > 2' ng-class="statNumber >2 && 'small-4' || 'small-6'")
+                        nvd3-stacked-area-chart(data='stattempPrev' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                            svg
+                        label {{prevDate}}
+                    div(ng-show='statNumber > 2' ng-class="statNumber >2 && 'columns small-4' || ''")
+                        nvd3-stacked-area-chart(data='stattempPrevPrev' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                            svg
+                        label {{prevPrevDate}}
 
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W
@@ -75,6 +93,13 @@ div#menus
                     li
                         a(ng-click='split()') split
                     li.has-dropdown
+                        a(href='#') stats
+                        ul.dropdown
+                            li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
+                                a current
+                            li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
+                                a past
+                    li.has-dropdown
                         a settings
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
@@ -98,10 +123,21 @@ div#menus
 
         .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
-                label
-                    strong Water Stress
-                nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
-                    svg
+                .row
+                    label
+                        strong Water Stress
+                    .columns(ng-class="statNumber ==3 && 'small-4' || statNumber >1 && 'small-6' || 'small-12'")
+                        nvd3-stacked-area-chart(data='stattemp' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                            svg
+                        label {{currentDate}}
+                    .columns(ng-show='statNumber > 2' ng-class="statNumber >2 && 'small-4' || 'small-6'")
+                        nvd3-stacked-area-chart(data='stattempPrev' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                            svg
+                        label {{prevDate}}
+                    div(ng-show='statNumber > 2' ng-class="statNumber >2 && 'columns small-4' || ''")
+                        nvd3-stacked-area-chart(data='stattempPrevPrev' showYAxis='true' interpolate='step' color='tempColor()' tooltips='true' interactive='true' tooltipcontent='toolTipContent()' width='120' height='200' margin='{top:12,right:25,left:50,bottom:10}')
+                            svg
+                        label {{prevPrevDate}}
 
         .cursor-location
             span.lat lat: {{cursor.lat | latLng}} W

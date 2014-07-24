@@ -98,23 +98,6 @@ angular.module('ceresApp')
   function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory) {
 
     function initLegends(){
-      $scope.legendTemp = $scope.addLegend({
-              position: "bottomleft",
-              colors: [
-                "white",
-                "red",
-                "yellow",
-                "green",
-                "blue",
-              ],
-              labels: [
-                "<strong> Water Stress </strong>",
-                "High stress",
-                "Moderate stress",
-                "Low stress",
-                "Unstressed"
-              ]
-            }, 'NDVI');
       $scope.legendNDVI = $scope.addLegend({
               position: "bottomleft",
               colors: [
@@ -134,6 +117,23 @@ angular.module('ceresApp')
                 "High vigor"
               ]
             }, 'temperature');
+      $scope.legendTemp = $scope.addLegend({
+              position: "bottomleft",
+              colors: [
+                "white",
+                "red",
+                "yellow",
+                "green",
+                "blue",
+              ],
+              labels: [
+                "<strong> Water Stress </strong>",
+                "High stress",
+                "Moderate stress",
+                "Low stress",
+                "Unstressed"
+              ]
+            }, 'NDVI');
     }
 
     $scope.$on('resetMaps', function(e) {
@@ -169,11 +169,18 @@ angular.module('ceresApp')
       if ($scope.currentDate) {
         if ($scope.stats[$scope.center.name] &&
           $scope.stats[$scope.center.name][$scope.currentDate]) {
+            var dateIndex = Object.keys($scope.stats[$scope.center.name]).indexOf($scope.currentDate);
+            $scope.prevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-1];
+            $scope.prevPrevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-2];
             if ($scope.stats[$scope.center.name][$scope.currentDate].temp) {
               $scope.stattemp = $scope.stats[$scope.center.name][$scope.currentDate].temp;
+                $scope.stattempPrev = $scope.stats[$scope.center.name][$scope.prevDate].temp || null;
+                $scope.stattempPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].temp || null;
             }
             if ($scope.stats[$scope.center.name][$scope.currentDate].NDVI) {
               $scope.statNDVI = $scope.stats[$scope.center.name][$scope.currentDate].NDVI;
+                $scope.statNDVIPrev = $scope.stats[$scope.center.name][$scope.prevDate].NDVI || null;
+                $scope.statNDVIPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].NDVI || null;
             }
         }
       }
@@ -221,19 +228,30 @@ angular.module('ceresApp')
         if ($scope.stats) {
           if ($scope.stats[$scope.center.name] &&
             $scope.stats[$scope.center.name][newvalue]) {
+            var dateIndex = Object.keys($scope.stats[$scope.center.name]).indexOf($scope.currentDate);
+            $scope.prevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-1];
+            $scope.prevPrevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-2];
               if ($scope.stats[$scope.center.name][newvalue].temp) {
                 $scope.stattemp = $scope.stats[$scope.center.name][newvalue].temp;
+                $scope.stattempPrev = $scope.stats[$scope.center.name][$scope.prevDate].temp || null;
+                $scope.stattempPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].temp || null;
               } else {
                 $scope.stattemp = null;
               }
               if ($scope.stats[$scope.center.name][newvalue].NDVI) {
                 $scope.statNDVI = $scope.stats[$scope.center.name][newvalue].NDVI;
+                $scope.statNDVIPrev = $scope.stats[$scope.center.name][$scope.prevDate].NDVI || null;
+                $scope.statNDVIPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].NDVI || null;
               } else {
                 $scope.statNDVI = null;
               }
             } else {
               $scope.stattemp = null;
+              $scope.stattempPrev = null;
+              $scope.stattempPrevPrev = null;
               $scope.statNDVI = null;
+              $scope.statNDVIPrev = null;
+              $scope.statNDVIPrevPrev = null;
             }
         }
       });
@@ -489,12 +507,24 @@ angular.module('ceresApp')
   $scope.showLayerControl = true;
   $scope.showLegend = true;
   $scope.showStats = true;
+  $scope.statNumber = 1;
   $scope.isSplit = false;
   $scope.centerIndex = 0;
+  var statContainer = $('.layerStats.row');
 
   function resetMaps(){
     $scope.$broadcast('resetMaps');
   }
+
+  $scope.$watch('statNumber', function(num) {
+    if (num === 1) {
+      statContainer.width('150px');
+    } else if (num === 2) {
+      statContainer.width('250px')
+    } else {
+      statContainer.width('380px');
+    }
+  });
 
   // split maps
   $scope.split = function() {
@@ -529,6 +559,10 @@ angular.module('ceresApp')
     if ($scope.isSplit){
       legend1.hide();
     }
+  }
+
+  $scope.toggleStatNumber = function(num) {
+    $scope.statNumber = num;
   }
 
 }]);
