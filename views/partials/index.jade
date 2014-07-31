@@ -11,6 +11,13 @@ div#menus
                 ul.right
                     li#split-button.has-tip(data-tooltip title='split view')
                         a(ng-hide='isSplit' ng-click='split()') split
+                    li.has-dropdown
+                        a(href='#') drawings
+                        ul.dropdown
+                            li(ng-click='exportDrawing()')
+                                a export
+                            li(ng-file-select='importDrawing($files)')
+                                a import
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') stats
                         ul.dropdown
@@ -92,6 +99,13 @@ div#menus
                 ul.right
                     li
                         a(ng-click='split()') split
+                    li.has-dropdown
+                        a(href='#') drawings
+                        ul.dropdown
+                            li(ng-click='exportDrawing()')
+                                a export
+                            li(ng-file-select='importDrawing($files)')
+                                a import
                     li.has-dropdown
                         a(href='#') stats
                         ul.dropdown

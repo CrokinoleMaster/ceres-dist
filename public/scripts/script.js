@@ -4,7 +4,8 @@ angular.module('ceresApp', [
   'ngRoute',
   'leaflet-directive',
   'ui-rangeSlider',
-  'nvd3ChartDirectives'
+  'nvd3ChartDirectives',
+  'angularFileUpload'
 ]).config(['$routeProvider', function($routeProvider){
     $routeProvider.when('/', {
         templateUrl: 'partials/login',
@@ -94,8 +95,12 @@ angular.module('ceresApp')
 angular.module('ceresApp')
   .controller('DefaultMapController',
   ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
-   'MapStatsFactory',
-  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory) {
+   'MapStatsFactory', 'DrawingFactory',
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory, DrawingFactory) {
+
+    $scope.drawingFactory = Object.create(DrawingFactory);
+
+    $scope.center = {};
 
     function initLegends(){
       $scope.legendNDVI = $scope.addLegend({
@@ -144,9 +149,39 @@ angular.module('ceresApp')
       $scope.$apply();
     });
 
-    $scope.moveCenter = function(i){
+    $scope.moveCenter = function(i) {
       $scope.$parent.centerIndex = i;
     }
+
+    $scope.exportDrawing = function() {
+      $scope.drawingFactory.exportJson(
+          function(res, status, headers, config) {
+            var link = angular.element('<a/>');
+            link.attr({
+              href: $scope.drawingFactory.location
+            })[0].click()
+          }, function(res) {
+            console.log(res);
+          }
+      );
+    };
+
+    $scope.importDrawing = function($file) {
+      var file = $file[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var geoJsonFeature = reader.result;
+        try {
+          var jsonObj = JSON.parse(geoJsonFeature);
+          $scope.drawingFactory.addGeoJson(jsonObj, $scope.leaflet);
+        }
+        catch (e) {
+          alert('The file appears to be corrupted.');
+          console.log(e);
+        }
+      }
+      reader.readAsText(file);
+    };
 
     // stats
     MapStatsFactory.getStats().then(function(stats) {
@@ -196,11 +231,9 @@ angular.module('ceresApp')
       leafletData.getMap('map1').then(function(map1) {
         leafletData.getMap('map2').then(function(map2){
             move1 = function (){
-              // map1.setView(map2.getCenter(), map2.getZoom(), {animate: false, duration: 1});
               map1.panTo(map2.getCenter(), {animate: false, duration: 1});
             }
             move2 = function (){
-              // map2.setView(map1.getCenter(), map1.getZoom(), {animate: false, duration: 1});
               map2.panTo(map1.getCenter(), {animate: false, duration: 1});
             }
             zoom1 = function(){
@@ -360,108 +393,7 @@ angular.module('ceresApp')
 
       leafletData.getMap(map).then(function(map) {
         $scope.leaflet = map;
-        var $modal = $('#marker-modal');
-        // draw tools
-        var drawItems = new L.FeatureGroup();
-        map.addLayer(drawItems);
-
-        // hack to keep more than one popup open at a time
-        map.openPopup = function(popup, latlng, options) {
-          if (!(popup instanceof L.Popup)) {
-            var content = popup;
-            popup = new L.Popup(options).setContent;
-          }
-          if (latlng) {
-            popup.setLatLng(latlng);
-          }
-          if (this.hasLayer(popup)) {
-            return this;
-          }
-          this._popup = popup;
-          return this.addLayer(popup);
-        }
-        var drawControl = new L.Control.Draw({
-          position: 'topleft',
-          draw: {
-            // polyline: {
-            //   metric: false,
-            //   shapeOptions: {
-            //     color: 'magenta',
-            //     weight: 10
-            //   }
-            // },
-            polyline: false,
-            // polygon: {
-            //   showArea: true,
-            //   allowIntersection: false,
-            //   metric: false,
-            //   drawError: {
-            //     color: '#e1e100',
-            //     message: '<strong>do not intersect<strong>'
-            //   },
-            //   shapeOptions: {
-            //     color: 'purple',
-            //     weight: 10
-            //   }
-            // },
-            polygon: false,
-            // circle: {
-            //   metric: false,
-            //   shapeOptions: {
-            //     color: 'red',
-            //     weight: 10
-            //   }
-            // },
-            circle: false,
-            rectangle: {
-              showArea: true,
-              shapeOptions: {
-                color: 'blue',
-                weight: 10
-              },
-              metric: false
-            }
-          },
-          edit: {
-            featureGroup: drawItems
-          }
-        });
-        map.addControl(drawControl);
-        map.on('draw:created', function(e) {
-          var type = e.layerType;
-          var layer = e.layer;
-          var text = null;
-          var area = null;
-          if (type === 'marker') {
-            $modal.foundation('reveal', 'open');
-            $modal.find('.button').off('click');
-            $modal.find('.button').click(function() {
-              text = $modal.find('input').val();
-              if (text) {
-                layer.bindPopup(text,{closeButton: false, autoPan: false});
-              }
-              drawItems.addLayer(layer);
-              layer.openPopup();
-              // hack to keep popups open
-              map.on('click', function(e) {
-                layer.openPopup();
-              });
-              $modal.foundation('reveal', 'close');
-            });
-          } else if (type === 'rectangle' || type === 'polygon'){
-            area = L.GeometryUtil.geodesicArea(layer._latlngs);
-            area = L.GeometryUtil.readableArea(area);
-            layer.bindPopup('<strong>' + area + '</strong>');
-            drawItems.addLayer(layer);
-          } else if (type === 'circle'){
-            area = Math.pow(layer.getRadius(), 2) * Math.PI;
-            area = (area / 4047).toFixed(2);
-            layer.bindPopup('<strong>' + area + ' acres</strong>');
-            drawItems.addLayer(layer);
-          } else {
-            drawItems.addLayer(layer);
-          }
-        });
+        $scope.drawingFactory.addControls(map);
 
         $scope.addLegend = function(value, name){
           var legend = L.control({ position: 'bottomright' });
@@ -630,6 +562,143 @@ angular.module('ceresApp')
         $scope.feedDisplay = !$scope.feedDisplay;
     }
     $scope.loadFeed();
+
+}]);
+ 'use strict';
+
+angular.module('ceresApp')
+  .factory('DrawingFactory', ['$http', function($http){
+
+    var DrawingFactory = {};
+
+    L.Marker.prototype.toGeoJSON = function() {
+      return L.GeoJSON.getFeature(this, {
+        type: 'Point',
+        coordinates: L.GeoJSON.latLngToCoords(this.getLatLng()),
+        description: this.getPopup().getContent()
+      });
+    }
+
+    DrawingFactory.location = '/api/drawing/download/';
+
+    DrawingFactory.exportJson = function(success, error) {
+      $http({
+        url: '/api/drawing/export/',
+        method: 'POST',
+        data: {'drawing' : JSON.stringify(this.drawItems.toGeoJSON()) },
+        headers: {'Content-Type': 'application/json'}
+      }).success(success).error(error);
+    };
+
+    DrawingFactory.addGeoJson = function(geoJsonFeature, map) {
+      if (!this.drawItems)
+        this.drawItems = new L.FeatureGroup();
+      var area;
+      var text;
+      var options = {
+        onEachFeature: function(featureData, layer) {
+          if (featureData.geometry.type === 'Polygon') {
+            area = L.GeometryUtil.geodesicArea(layer._latlngs);
+            area = L.GeometryUtil.readableArea(area);
+            layer.bindPopup('<strong>' + area + '</strong>');
+          }
+          if (featureData.geometry.type === 'Point') {
+            var text = featureData.geometry.description;
+            layer.bindPopup(text,{closeButton: false, autoPan: false});
+            layer.openPopup();
+            // hack to keep popups open
+            map.on('dragstart', function(e) {
+              layer.openPopup();
+            });
+          }
+        }
+      };
+      var geoJsonLayer = L.geoJson(geoJsonFeature, options);
+      this.drawItems.addLayer(geoJsonLayer);
+    };
+
+    DrawingFactory.addControls = function(map) {
+      var $modal = $('#marker-modal');
+      var self = this;
+      // draw tools
+      if (!this.drawItems)
+        self.drawItems = new L.FeatureGroup();
+
+      map.addLayer(self.drawItems);
+
+      // hack to keep more than one popup open at a time
+      map.openPopup = function(popup, latlng, options) {
+        if (!(popup instanceof L.Popup)) {
+          var content = popup;
+          popup = new L.Popup(options).setContent;
+        }
+        if (latlng) {
+          popup.setLatLng(latlng);
+        }
+        if (this.hasLayer(popup)) {
+          return this;
+        }
+        this._popup = popup;
+        return this.addLayer(popup);
+      }
+      var drawControl = new L.Control.Draw({
+        position: 'topleft',
+        draw: {
+          polyline: false,
+          polygon: false,
+          circle: false,
+          rectangle: {
+            showArea: true,
+            shapeOptions: {
+              color: 'blue',
+              weight: 10
+            },
+            metric: false
+          }
+        },
+        edit: {
+          featureGroup: self.drawItems
+        }
+      });
+      map.addControl(drawControl);
+      map.on('draw:created', function(e) {
+        var type = e.layerType;
+        var layer = e.layer;
+        var text = null;
+        var area = null;
+        if (type === 'marker') {
+          $modal.foundation('reveal', 'open');
+          $modal.find('.button').off('click');
+          $modal.find('.button').click(function() {
+            text = $modal.find('input').val();
+            if (text) {
+              layer.bindPopup(text,{closeButton: false, autoPan: false});
+            }
+            self.drawItems.addLayer(layer);
+            layer.openPopup();
+            // hack to keep popups open
+            map.on('click', function(e) {
+              layer.openPopup();
+            });
+            $modal.foundation('reveal', 'close');
+          });
+        } else if (type === 'rectangle' || type === 'polygon'){
+          area = L.GeometryUtil.geodesicArea(layer._latlngs);
+          area = L.GeometryUtil.readableArea(area);
+          layer.bindPopup('<strong>' + area + '</strong>');
+          self.drawItems.addLayer(layer);
+        } else if (type === 'circle'){
+          area = Math.pow(layer.getRadius(), 2) * Math.PI;
+          area = (area / 4047).toFixed(2);
+          layer.bindPopup('<strong>' + area + ' acres</strong>');
+          self.drawItems.addLayer(layer);
+        } else {
+          self.drawItems.addLayer(layer);
+        }
+      });
+    }
+
+    return DrawingFactory;
 
 }]);
  'use strict';
