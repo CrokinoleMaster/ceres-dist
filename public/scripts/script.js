@@ -422,7 +422,6 @@ angular.module('ceresApp')
       });
     }
 
-
 }]);
 
  'use strict';
