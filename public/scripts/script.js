@@ -100,7 +100,7 @@ angular.module('ceresApp')
 
     $scope.drawingFactory = Object.create(DrawingFactory);
 
-    $scope.center = {};
+    $scope.center = null;
 
     function initLegends(){
       $scope.legendNDVI = $scope.addLegend({
@@ -219,7 +219,6 @@ angular.module('ceresApp')
             }
         }
       }
-
     });
 
     // sync maps
