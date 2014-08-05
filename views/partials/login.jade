@@ -6,9 +6,24 @@
                 h3 We optimize water and nitrogen
     .row
         .medium-12.text-center
-            a.button.radius(href='/account' rel='login') Log in
+            a.button.radius(href='#' data-reveal-id='login-modal') Log in
             a#demo.button.radius(href='login/demo') Demo
-            .supported App is only supported by
-                a(href='https://www.google.com/intl/en_us/chrome/browser/') Google Chrome
-                | , Safari, and
-                a(href='https://www.mozilla.org/en-US/firefox/new/') Firefox
+
+    #login-modal.reveal-modal.tiny(data-reveal)
+        form( name='login')
+            .row
+                .small-12.columns.logo
+            .row
+                .small-12.columns
+                    label E-mail
+                    input(name='email' type='text' placeholder='Email')
+            .row
+                .small-12.columns
+                    label Password
+                    input(name='password' type='password' placeholder='Password')
+            .row
+                .small-12.columns
+                    button(type='submit') Log in
+            .row
+                .small-12.columns
+                    .error-messages
