@@ -293,7 +293,9 @@ angular.module('ceresApp')
       $scope.$parent.$watch('centerIndex', function(newvalue){
         var dates = $scope.fields[newvalue].dates;
         $scope.center = $scope.centers[newvalue];
-        $scope.leaflet.panTo(new L.LatLng($scope.center.lat, $scope.center.lng));
+        console.log($scope.center);
+        $scope.leaflet.panTo(new L.LatLng($scope.center.lat, $scope.center.lng), {animate: false});
+        $scope.leaflet.setZoom($scope.center.zoom, {animate: false});
         $scope.layers.overlays = dates[Object.keys(dates)[0]].overlays;
         $scope.dates = $scope.fields[newvalue].dates;
         $scope.currentDate = Object.keys(dates).pop();
@@ -383,7 +385,7 @@ angular.module('ceresApp')
       defaults: {
         zoomControlPosition: 'bottomleft',
         touchZoom: false,
-        minZoom: 15,
+        minZoom: 13,
         maxZoom: 20
       },
     });
