@@ -11,20 +11,20 @@ div#menus
                 ul.right
                     li#split-button.has-tip(data-tooltip title='split view')
                         a(ng-hide='isSplit' ng-click='split()') split
-                    // li.has-dropdown
-                    //     a(href='#') drawings
-                    //     ul.dropdown
-                    //         li(ng-click='exportDrawing()')
-                    //             a export
-                    //         li(ng-file-select='importDrawing($files)')
-                    //             a import
-                    // li.has-dropdown(ng-hide='isSplit')
-                    //     a(href='#') stats
-                    //     ul.dropdown
-                    //         li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
-                    //             a current
-                    //         li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
-                    //             a past
+                    li.has-dropdown
+                        a(href='#') drawings
+                        ul.dropdown
+                            li(ng-click='exportDrawing()')
+                                a export
+                            li(ng-file-select='importDrawing($files)')
+                                a import
+                    li.has-dropdown(ng-hide='isSplit')
+                        a(href='#') stats
+                        ul.dropdown
+                            li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
+                                a current
+                            li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
+                                a past
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
                         ul.dropdown
@@ -99,20 +99,20 @@ div#menus
                 ul.right
                     li
                         a(ng-click='split()') split
-                    // li.has-dropdown
-                    //     a(href='#') drawings
-                    //     ul.dropdown
-                    //         li(ng-click='exportDrawing()')
-                    //             a export
-                    //         li(ng-file-select='importDrawing($files)')
-                    //             a import
-                    // li.has-dropdown
-                    //     a(href='#') stats
-                    //     ul.dropdown
-                    //         li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
-                    //             a current
-                    //         li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
-                    //             a past
+                    li.has-dropdown
+                        a(href='#') drawings
+                        ul.dropdown
+                            li(ng-click='exportDrawing()')
+                                a export
+                            li(ng-file-select='importDrawing($files)')
+                                a import
+                    li.has-dropdown
+                        a(href='#') stats
+                        ul.dropdown
+                            li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
+                                a current
+                            li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
+                                a past
                     li.has-dropdown
                         a settings
                         ul.dropdown
