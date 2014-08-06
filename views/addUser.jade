@@ -10,20 +10,21 @@ html
     script( src='//code.jquery.com/ui/1.10.4/jquery-ui.js' )
   body
     .container
-      .ui-widget.row
-        .col-sm-12
-          label( for='usersearch' ) search user:
-          input#usersearch
-          button.btn.btn-primary#search-btn( type='button' ) Search
-          button.btn.btn-primary#new-btn( type='button' ) New User
-      .row
-        .col-sm-12
-          #notification
-      .row
-        #editor-holder.json-editor.col-sm-12
-      .row
-        .col-sm-12
-          button.btn.btn-primary#update-btn( type='button' ) Update
+        a.button.radius(rel='login') Login
+      // .ui-widget.row
+      //   .col-sm-12
+      //     label( for='usersearch' ) search user:
+      //     input#usersearch
+      //     button.btn.btn-primary#search-btn( type='button' ) Search
+      //     button.btn.btn-primary#new-btn( type='button' ) New User
+      // .row
+      //   .col-sm-12
+      //     #notification
+      // .row
+      //   #editor-holder.json-editor.col-sm-12
+      // .row
+      //   .col-sm-12
+      //     button.btn.btn-primary#update-btn( type='button' ) Update
     style.
       #editor-holder{
         margin-bottom: 20px;
@@ -35,5 +36,6 @@ html
         color: green;
         font-weight: 2em;
       }
+    script( src="https://js.userbin.com?177262344831172" )
     script( src='adminscripts/jquery.jsoneditor.min.js' )
     script( src='adminscripts/admin.js' )
