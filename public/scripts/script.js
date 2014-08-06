@@ -49,6 +49,7 @@ angular.module('ceresApp', [
               $location.path('/index');
           }
         }
+        $location.url($location.path());
     });
     $rootScope.$on('$viewContentLoaded', function () {
         $(document).foundation();
