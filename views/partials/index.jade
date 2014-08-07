@@ -11,6 +11,8 @@ div#menus
                 ul.right
                     li#split-button.has-tip(data-tooltip title='split view')
                         a(ng-hide='isSplit' ng-click='split()') split
+                    li(ng-class="{'active': timeLapseActive }")
+                        a(ng-click='timeLapse()') time-lapse
                     li.has-dropdown
                         a(href='#') drawings
                         ul.dropdown
