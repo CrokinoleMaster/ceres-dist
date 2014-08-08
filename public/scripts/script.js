@@ -96,8 +96,10 @@ angular.module('ceresApp')
 angular.module('ceresApp')
   .controller('DefaultMapController',
   ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
-   'MapStatsFactory', 'DrawingFactory',
-  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory, DrawingFactory) {
+   'MapStatsFactory', 'DrawingFactory', 'TimeLapseFactory',
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory, DrawingFactory, TimeLapseFactory) {
+
+    $scope.timeLapseActive = false;
 
     $scope.drawingFactory = Object.create(DrawingFactory);
 
@@ -152,6 +154,15 @@ angular.module('ceresApp')
 
     $scope.moveCenter = function(i) {
       $scope.$parent.centerIndex = i;
+    }
+
+    $scope.timeLapse = function() {
+      if (!$scope.timeLapseActive) {
+        TimeLapseFactory.start($scope);
+      } else {
+        TimeLapseFactory.stop();
+      }
+      $scope.timeLapseActive = !$scope.timeLapseActive;
     }
 
     $scope.exportDrawing = function() {
@@ -294,7 +305,6 @@ angular.module('ceresApp')
       $scope.$parent.$watch('centerIndex', function(newvalue){
         var dates = $scope.fields[newvalue].dates;
         $scope.center = $scope.centers[newvalue];
-        console.log($scope.center);
         $scope.leaflet.panTo(new L.LatLng($scope.center.lat, $scope.center.lng), {animate: false});
         $scope.leaflet.setZoom($scope.center.zoom, {animate: false});
         $scope.layers.overlays = dates[Object.keys(dates)[0]].overlays;
@@ -728,6 +738,50 @@ angular.module('ceresApp')
     };
 
     return MapStatsFactory;
+
+}]);
+ 'use strict';
+
+angular.module('ceresApp')
+  .factory('TimeLapseFactory', ['$http', '$interval', function($http, $interval){
+
+
+    var _sort = function(dates) {
+      return dates.sort(function (a, b) {
+        a = a.split('-');
+        b = b.split('-');
+        return a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+      });
+    }
+
+    var TimeLapseFactory = {};
+
+    TimeLapseFactory.promise = null;
+
+    TimeLapseFactory.start = function ($scope) {
+      var dates = Object.keys($scope.dates);
+      dates = _sort(dates);
+      console.log(dates);
+      console.log($scope.dates)
+      console.log(dates.indexOf($scope.currentDate));
+      var length = dates.length;
+      var i = dates.indexOf($scope.currentDate);
+      $scope.currentDate = dates[i];
+      i++;
+      this.promise = $interval(function(){
+        $scope.currentDate = dates[i];
+        i++;
+        if ( i === length) {
+          i=0;
+        }
+      }, 5000);
+    };
+
+    TimeLapseFactory.stop = function() {
+      $interval.cancel(this.promise);
+    }
+
+    return TimeLapseFactory;
 
 }]);
  'use strict';
