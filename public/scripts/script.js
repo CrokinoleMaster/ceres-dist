@@ -250,43 +250,47 @@ angular.module('ceresApp')
       });
     }
 
-    function watches(){
-      $scope.$watch('currentDate', function(newvalue){
-        Object.keys($scope.dates).forEach(function(date) {
-          if (date === newvalue) {
-            $scope.layers.overlays = $scope.dates[date].overlays;
-          }
-        });
-        // get layer stats and set to $scope['stat'+layerType]
-        if ($scope.stats) {
-          if ($scope.stats[$scope.center.name] &&
-            $scope.stats[$scope.center.name][newvalue]) {
-            var dateIndex = Object.keys($scope.stats[$scope.center.name]).indexOf($scope.currentDate);
-            $scope.prevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-1];
-            $scope.prevPrevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-2];
-              if ($scope.stats[$scope.center.name][newvalue].temp) {
-                $scope.stattemp = $scope.stats[$scope.center.name][newvalue].temp;
-                $scope.stattempPrev = $scope.stats[$scope.center.name][$scope.prevDate].temp || null;
-                $scope.stattempPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].temp || null;
-              } else {
-                $scope.stattemp = null;
-              }
-              if ($scope.stats[$scope.center.name][newvalue].NDVI) {
-                $scope.statNDVI = $scope.stats[$scope.center.name][newvalue].NDVI;
-                $scope.statNDVIPrev = $scope.stats[$scope.center.name][$scope.prevDate].NDVI || null;
-                $scope.statNDVIPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].NDVI || null;
-              } else {
-                $scope.statNDVI = null;
-              }
+    function onDateChange(newvalue){
+      Object.keys($scope.dates).forEach(function(date) {
+        if (date === newvalue) {
+          $scope.layers.overlays = $scope.dates[date].overlays;
+        }
+      });
+      // get layer stats and set to $scope['stat'+layerType]
+      if ($scope.stats) {
+        if ($scope.stats[$scope.center.name] &&
+          $scope.stats[$scope.center.name][newvalue]) {
+          var dateIndex = Object.keys($scope.stats[$scope.center.name]).indexOf($scope.currentDate);
+          $scope.prevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-1];
+          $scope.prevPrevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-2];
+            if ($scope.stats[$scope.center.name][newvalue].temp) {
+              $scope.stattemp = $scope.stats[$scope.center.name][newvalue].temp;
+              $scope.stattempPrev = $scope.stats[$scope.center.name][$scope.prevDate].temp || null;
+              $scope.stattempPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].temp || null;
             } else {
               $scope.stattemp = null;
-              $scope.stattempPrev = null;
-              $scope.stattempPrevPrev = null;
-              $scope.statNDVI = null;
-              $scope.statNDVIPrev = null;
-              $scope.statNDVIPrevPrev = null;
             }
-        }
+            if ($scope.stats[$scope.center.name][newvalue].NDVI) {
+              $scope.statNDVI = $scope.stats[$scope.center.name][newvalue].NDVI;
+              $scope.statNDVIPrev = $scope.stats[$scope.center.name][$scope.prevDate].NDVI || null;
+              $scope.statNDVIPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].NDVI || null;
+            } else {
+              $scope.statNDVI = null;
+            }
+          } else {
+            $scope.stattemp = null;
+            $scope.stattempPrev = null;
+            $scope.stattempPrevPrev = null;
+            $scope.statNDVI = null;
+            $scope.statNDVIPrev = null;
+            $scope.statNDVIPrevPrev = null;
+          }
+      }
+    }
+
+    function watches(){
+      $scope.$watch('currentDate', function(newvalue) {
+        onDateChange(newvalue);
       });
       $scope.$watch('isSplit', function(newvalue){
         $scope.leaflet.invalidateSize(false);
@@ -301,12 +305,12 @@ angular.module('ceresApp')
           }
         });
         $scope.center = $scope.centers[newvalue];
-        console.log($scope.center);
         $scope.leaflet.panTo(new L.LatLng($scope.center.lat, $scope.center.lng), {animate: false});
         $scope.leaflet.setZoom($scope.center.zoom, {animate: false});
         $scope.layers.overlays = dates[Object.keys(dates)[0]].overlays;
         $scope.dates = $scope.fields[newvalue].dates;
         $scope.currentDate = Object.keys(dates).pop();
+        onDateChange($scope.currentDate);
       })
       // opacity layers watch
       $scope.$watch('layers.overlays.NDVI.layerParams.opacity', function(newvalue){
