@@ -96,8 +96,10 @@ angular.module('ceresApp')
 angular.module('ceresApp')
   .controller('DefaultMapController',
   ['$scope', '$location', 'leafletData', 'leafletLegendHelpers', 'UserMapsFactory',
-   'MapStatsFactory', 'DrawingFactory',
-  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory, DrawingFactory) {
+   'MapStatsFactory', 'DrawingFactory', 'TimeLapseFactory',
+  function($scope, $location, leafletData, leafletLegendHelpers, UserMapsFactory, MapStatsFactory, DrawingFactory, TimeLapseFactory) {
+
+    $scope.timeLapseActive = false;
 
     $scope.drawingFactory = Object.create(DrawingFactory);
 
@@ -154,12 +156,21 @@ angular.module('ceresApp')
       $scope.$parent.centerIndex = i;
     }
 
+    $scope.timeLapse = function() {
+      if (!$scope.timeLapseActive) {
+        TimeLapseFactory.start($scope);
+      } else {
+        TimeLapseFactory.stop();
+      }
+      $scope.timeLapseActive = !$scope.timeLapseActive;
+    }
+
     $scope.exportDrawing = function() {
       $scope.drawingFactory.exportJson(
           function(res, status, headers, config) {
             var link = angular.element('<a/>');
             link.attr({
-              href: $scope.drawingFactory.location
+              href: $scope.drawingFactory.downloadURL
             })[0].click()
           }, function(res) {
             console.log(res);
@@ -183,6 +194,34 @@ angular.module('ceresApp')
       }
       reader.readAsText(file);
     };
+
+    $scope.getDrawing = function() {
+      $scope.drawingFactory.getDrawing({
+        id: Userbin.currentProfile().id,
+        field: $scope.center.name,
+        date: $scope.currentDate
+      }, function(drawing) {
+        console.log(drawing);
+        if ($scope.leaflet) {
+          $scope.drawingFactory.addGeoJson(drawing, $scope.leaflet);
+        }
+      }, function(err) {
+      });
+    }
+
+    // for saving drawings
+    function initSaveDrawing(map) {
+      map.on('draw:edited draw:deleted draw:drawstop', function(e) {
+        $scope.drawingFactory.saveDrawing({
+          id: Userbin.currentProfile().id,
+          field: $scope.center.name,
+          date: $scope.currentDate
+        }, function(drawing) {
+        }, function(err) {
+          alert('error saving');
+        });
+      });
+    }
 
     // stats
     MapStatsFactory.getStats().then(function(stats) {
@@ -249,44 +288,46 @@ angular.module('ceresApp')
         });
       });
     }
-
     function onDateChange(newvalue){
-      Object.keys($scope.dates).forEach(function(date) {
-        if (date === newvalue) {
-          $scope.layers.overlays = $scope.dates[date].overlays;
-        }
-      });
-      // get layer stats and set to $scope['stat'+layerType]
-      if ($scope.stats) {
-        if ($scope.stats[$scope.center.name] &&
-          $scope.stats[$scope.center.name][newvalue]) {
-          var dateIndex = Object.keys($scope.stats[$scope.center.name]).indexOf($scope.currentDate);
-          $scope.prevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-1];
-          $scope.prevPrevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-2];
-            if ($scope.stats[$scope.center.name][newvalue].temp) {
-              $scope.stattemp = $scope.stats[$scope.center.name][newvalue].temp;
-              $scope.stattempPrev = $scope.stats[$scope.center.name][$scope.prevDate].temp || null;
-              $scope.stattempPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].temp || null;
+        // change layers
+        Object.keys($scope.dates).forEach(function(date) {
+          if (date === newvalue) {
+            $scope.layers.overlays = $scope.dates[date].overlays;
+          }
+        });
+        // get drawing
+        $scope.getDrawing();
+        // get layer stats and set to $scope['stat'+layerType]
+        if ($scope.stats) {
+          if ($scope.stats[$scope.center.name] &&
+            $scope.stats[$scope.center.name][newvalue]) {
+            var dateIndex = Object.keys($scope.stats[$scope.center.name]).indexOf($scope.currentDate);
+            $scope.prevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-1];
+            $scope.prevPrevDate = Object.keys($scope.stats[$scope.center.name])[dateIndex-2];
+              if ($scope.stats[$scope.center.name][newvalue].temp) {
+                $scope.stattemp = $scope.stats[$scope.center.name][newvalue].temp;
+                $scope.stattempPrev = $scope.stats[$scope.center.name][$scope.prevDate].temp || null;
+                $scope.stattempPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].temp || null;
+              } else {
+                $scope.stattemp = null;
+              }
+              if ($scope.stats[$scope.center.name][newvalue].NDVI) {
+                $scope.statNDVI = $scope.stats[$scope.center.name][newvalue].NDVI;
+                $scope.statNDVIPrev = $scope.stats[$scope.center.name][$scope.prevDate].NDVI || null;
+                $scope.statNDVIPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].NDVI || null;
+              } else {
+                $scope.statNDVI = null;
+              }
             } else {
               $scope.stattemp = null;
-            }
-            if ($scope.stats[$scope.center.name][newvalue].NDVI) {
-              $scope.statNDVI = $scope.stats[$scope.center.name][newvalue].NDVI;
-              $scope.statNDVIPrev = $scope.stats[$scope.center.name][$scope.prevDate].NDVI || null;
-              $scope.statNDVIPrevPrev = $scope.stats[$scope.center.name][$scope.prevPrevDate].NDVI || null;
-            } else {
+              $scope.stattempPrev = null;
+              $scope.stattempPrevPrev = null;
               $scope.statNDVI = null;
+              $scope.statNDVIPrev = null;
+              $scope.statNDVIPrevPrev = null;
             }
-          } else {
-            $scope.stattemp = null;
-            $scope.stattempPrev = null;
-            $scope.stattempPrevPrev = null;
-            $scope.statNDVI = null;
-            $scope.statNDVIPrev = null;
-            $scope.statNDVIPrevPrev = null;
-          }
+        }
       }
-    }
 
     function watches(){
       $scope.$watch('currentDate', function(newvalue) {
@@ -297,7 +338,7 @@ angular.module('ceresApp')
       });
       $scope.$parent.$watch('centerIndex', function(newvalue){
         var dates = $scope.fields[newvalue].dates;
-        Object.keys(dates).forEach(function(date) {
+         Object.keys(dates).forEach(function(date) {
           if (dates[date].overlays.NDVI){
             var ndvi = dates[date].overlays.NDVI;
             delete dates[date].overlays.NDVI;
@@ -406,7 +447,8 @@ angular.module('ceresApp')
 
       leafletData.getMap(map).then(function(map) {
         $scope.leaflet = map;
-        $scope.drawingFactory.addControls(map);
+        initSaveDrawing(map);
+        $scope.drawingFactory.addControls(map, $scope);
 
         $scope.addLegend = function(value, name){
           var legend = L.control({ position: 'bottomright' });
@@ -583,15 +625,21 @@ angular.module('ceresApp')
 
     var DrawingFactory = {};
 
+    DrawingFactory.map = null;
+    DrawingFactory._drawControl = null;
+    DrawingFactory._drawItemLayers = [];
+
     L.Marker.prototype.toGeoJSON = function() {
+      var description;
+      if (this.getPopup()) { description = this.getPopup().getContent() };
       return L.GeoJSON.getFeature(this, {
         type: 'Point',
         coordinates: L.GeoJSON.latLngToCoords(this.getLatLng()),
-        description: this.getPopup().getContent()
+        description: description
       });
     }
 
-    DrawingFactory.location = '/api/drawing/download/';
+    DrawingFactory.downloadURL = '/api/drawing/download/';
 
     DrawingFactory.exportJson = function(success, error) {
       $http({
@@ -602,9 +650,43 @@ angular.module('ceresApp')
       }).success(success).error(error);
     };
 
+    DrawingFactory.saveDrawing = function(fields, success, error) {
+      if (fields.id && fields.field && fields.date) {
+        $http({
+          url: '/api/drawing/'+fields.id+'/'+fields.field+'/'+fields.date,
+          method: 'POST',
+          data: {'drawing' : JSON.stringify(this.drawItems.toGeoJSON()) },
+          headers: {'Content-Type': 'application/json'}
+        }).success(success).error(error);
+      }
+    };
+
+    DrawingFactory.getDrawing = function(fields, success, error) {
+      if (fields.id && fields.field && fields.date) {
+        $http({
+          url: '/api/drawing/'+fields.id+'/'+fields.field+'/'+fields.date,
+          method: 'GET',
+        }).success(success).error(error);
+      }
+    }
+
+    DrawingFactory.removeGeoJson = function() {
+      var self = this;
+      if (this.drawItems && this.map) {
+        this._drawItemLayers.forEach(function(layer) {
+          self.drawItems.removeLayer(layer);
+        })
+      }
+    }
+
     DrawingFactory.addGeoJson = function(geoJsonFeature, map) {
+      var self = this;
       if (!this.drawItems)
         this.drawItems = new L.FeatureGroup();
+      if (!geoJsonFeature.type) {
+        this.removeGeoJson();
+        return;
+      }
       var area;
       var text;
       var options = {
@@ -623,15 +705,20 @@ angular.module('ceresApp')
               layer.openPopup();
             });
           }
+          self.drawItems.addLayer(layer);
+          self._drawItemLayers.push(layer);
+        },
+        style: function(featureData) {
         }
       };
-      var geoJsonLayer = L.geoJson(geoJsonFeature, options);
-      this.drawItems.addLayer(geoJsonLayer);
+      this.removeGeoJson();
+      L.geoJson(geoJsonFeature, options);
     };
 
-    DrawingFactory.addControls = function(map) {
+    DrawingFactory.addControls = function(map, $scope) {
       var $modal = $('#marker-modal');
       var self = this;
+      this.map = map
       // draw tools
       if (!this.drawItems)
         self.drawItems = new L.FeatureGroup();
@@ -653,7 +740,7 @@ angular.module('ceresApp')
         this._popup = popup;
         return this.addLayer(popup);
       }
-      var drawControl = new L.Control.Draw({
+      self._drawControl = new L.Control.Draw({
         position: 'topleft',
         draw: {
           polyline: false,
@@ -672,7 +759,7 @@ angular.module('ceresApp')
           featureGroup: self.drawItems
         }
       });
-      map.addControl(drawControl);
+      map.addControl(self._drawControl);
       map.on('draw:created', function(e) {
         var type = e.layerType;
         var layer = e.layer;
@@ -693,6 +780,9 @@ angular.module('ceresApp')
               layer.openPopup();
             });
             $modal.foundation('reveal', 'close');
+            console.log(layer);
+            // fire event because the drawing is delayed due to popup
+            map.fireEvent('draw:drawstop');
           });
         } else if (type === 'rectangle' || type === 'polygon'){
           area = L.GeometryUtil.geodesicArea(layer._latlngs);
@@ -739,6 +829,50 @@ angular.module('ceresApp')
     };
 
     return MapStatsFactory;
+
+}]);
+ 'use strict';
+
+angular.module('ceresApp')
+  .factory('TimeLapseFactory', ['$http', '$interval', function($http, $interval){
+
+
+    var _sort = function(dates) {
+      return dates.sort(function (a, b) {
+        a = a.split('-');
+        b = b.split('-');
+        return a[0] - b[0] || a[1] - b[1] || a[2] - b[2];
+      });
+    }
+
+    var TimeLapseFactory = {};
+
+    TimeLapseFactory.promise = null;
+
+    TimeLapseFactory.start = function ($scope) {
+      var dates = Object.keys($scope.dates);
+      dates = _sort(dates);
+      console.log(dates);
+      console.log($scope.dates)
+      console.log(dates.indexOf($scope.currentDate));
+      var length = dates.length;
+      var i = dates.indexOf($scope.currentDate);
+      $scope.currentDate = dates[i];
+      i++;
+      this.promise = $interval(function(){
+        $scope.currentDate = dates[i];
+        i++;
+        if ( i === length) {
+          i=0;
+        }
+      }, 5000);
+    };
+
+    TimeLapseFactory.stop = function() {
+      $interval.cancel(this.promise);
+    }
+
+    return TimeLapseFactory;
 
 }]);
  'use strict';
