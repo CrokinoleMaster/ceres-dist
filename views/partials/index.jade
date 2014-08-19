@@ -30,8 +30,8 @@ div#menus
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
                                 a layer control
-                            li(ng-class="{'active': showStats}" ng-click='toggleStats()')
-                                a stats
+                            // li(ng-class="{'active': showStats}" ng-click='toggleStats()')
+                            //     a stats
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
                     li.active
@@ -45,7 +45,7 @@ div#menus
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
-                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
+                div(ng-show='false' range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
 
         .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
@@ -118,8 +118,8 @@ div#menus
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
                                 a layer control
-                            li(ng-class="{'active': showStats}" ng-click='toggleStats()')
-                                a stats
+                            // li(ng-class="{'active': showStats}" ng-click='toggleStats()')
+                            //     a stats
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
                     li.active
@@ -133,7 +133,7 @@ div#menus
             .slide-container.small-6.large-12(ng-repeat='overlay in layers.overlays')
                 label {{overlay.name}}
                 input(type='checkbox' ng-model='overlay.layerParams.opacity' ng-true-value='1' ng-false-value='0' ng-checked='overlay.layerParams.opacity')
-                div(range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
+                div(ng-show='false' range-slider min='0' max='1' model-min='0' decimal-places='1' step='0.1' pin-handle='min' model-max='overlay.layerParams.opacity' filter='percentage')
 
         .layerStats.row(ng-show='stattemp && showStats')
             .stats-container.small-12
