@@ -11,27 +11,29 @@ div#menus
                 ul.right
                     li#split-button.has-tip(data-tooltip title='split view')
                         a(ng-hide='isSplit' ng-click='split()') split
-                    // li.has-dropdown
-                    //     a(href='#') drawings
-                    //     ul.dropdown
-                    //         li(ng-click='exportDrawing()')
-                    //             a export
-                    //         li(ng-file-select='importDrawing($files)')
-                    //             a import
-                    // li.has-dropdown(ng-hide='isSplit')
-                    //     a(href='#') stats
-                    //     ul.dropdown
-                    //         li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
-                    //             a current
-                    //         li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
-                    //             a past
+                    li(ng-class="{'active': timeLapseActive }")
+                        a(ng-click='timeLapse()') time-lapse
+                    li.has-dropdown
+                        a(href='#') drawings
+                        ul.dropdown
+                            li(ng-click='exportDrawing()')
+                                a export
+                            li(ng-file-select='importDrawing($files)')
+                                a import
+                    li.has-dropdown(ng-hide='isSplit')
+                        a(href='#') stats
+                        ul.dropdown
+                            li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
+                                a current
+                            li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
+                                a past
                     li.has-dropdown(ng-hide='isSplit')
                         a(href='#') settings
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
                                 a layer control
-                            // li(ng-class="{'active': showStats}" ng-click='toggleStats()')
-                            //     a stats
+                            li(ng-class="{'active': showStats}" ng-click='toggleStats()')
+                                a stats
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
                     li.active
@@ -99,27 +101,27 @@ div#menus
                 ul.right
                     li
                         a(ng-click='split()') split
-                    // li.has-dropdown
-                    //     a(href='#') drawings
-                    //     ul.dropdown
-                    //         li(ng-click='exportDrawing()')
-                    //             a export
-                    //         li(ng-file-select='importDrawing($files)')
-                    //             a import
-                    // li.has-dropdown
-                    //     a(href='#') stats
-                    //     ul.dropdown
-                    //         li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
-                    //             a current
-                    //         li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
-                    //             a past
+                    li.has-dropdown
+                        a(href='#') drawings
+                        ul.dropdown
+                            li(ng-click='exportDrawing()')
+                                a export
+                            li(ng-file-select='importDrawing($files)')
+                                a import
+                    li.has-dropdown
+                        a(href='#') stats
+                        ul.dropdown
+                            li(ng-class="{'active': statNumber == 1}" ng-click='toggleStatNumber(1)')
+                                a current
+                            li(ng-class="{'active': statNumber == 3}" ng-click='toggleStatNumber(3)')
+                                a past
                     li.has-dropdown
                         a settings
                         ul.dropdown
                             li(ng-class="{'active': showLayerControl}" ng-click='toggleLayerControl()')
                                 a layer control
-                            // li(ng-class="{'active': showStats}" ng-click='toggleStats()')
-                            //     a stats
+                            li(ng-class="{'active': showStats}" ng-click='toggleStats()')
+                                a stats
                             li(ng-class="{'active': showLegend}" ng-click='toggleLegend()')
                                 a legend
                     li.active
